@@ -1,0 +1,61 @@
+
+
+PROFILE="$(urldecode "$(basename "${PATH_VARS['user']}")")"
+FISH="$(basename "${PATH_VARS['fish']}")"
+
+cd "$FISH_ROOT/badcop_"
+FISH_ROW="$(grep -E "^[^,]+,[^,]+,$FISH," "$PROFILE")"
+
+IFS=$'\n' read -d "" -ra FISH_DATA <<< "${FISH_ROW//,/$'\n'}"
+
+ATTR='width=192 height=192'
+
+rarity_table() {
+  for file in "$FISH_ROOT"/fish-by-rarity2/*; do
+    filename=${file##*/}
+    cut "$file" -d' ' -f1 | awk '{ print "r["$1"]=\"'$filename'\";" }'
+  done
+}
+
+RARITY_TABLE="$(rarity_table)"
+
+fish_images() {
+  awk -F, '
+BEGIN {
+'"$RARITY_TABLE"'
+}
+  {
+    print "<div class=fishbig>";
+    if ( $1 >= 5000 ) {
+      print "<img src=\"/static/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />" 
+    } else {
+      print "<img src=\"/static/newfish/spr_fish_"$1"_x.png\" loading=lazy '"$ATTR"' class=\""r[$1]" newfish "g"\" />" 
+    }
+    print "</div>";
+}'
+}
+
+RARITY="$(echo "$RARITY_TABLE" \
+  | grep "r\[${FISH_DATA[0]}\]" \
+  | cut -d'=' -f2 \
+  | tr -d '";')"
+RARITY="${RARITY//_/ }"
+
+htmx_page <<-EOF
+<aside id="showcase" class="expanded">
+<button onclick="showcase.classList.remove('expanded'); showcase.innerHTML='';">X</button>
+<h1>${PROFILE}'s Fish</h1>
+$(echo "${FISH_DATA[0]},${FISH_DATA[1]}" | fish_images)
+<pre>
+ID:       ${FISH_DATA[0]}
+NAME:     ${FISH_DATA[1]}
+SEED:     ${FISH_DATA[2]}
+RARITY:   ${RARITY^}
+HP:       ${FISH_DATA[3]}
+BASE_DMG: ${FISH_DATA[4]}
+VAR_DMG:  ${FISH_DATA[5]}
+SPEED:    ${FISH_DATA[6]}
+WINS:     ${FISH_DATA[7]:-UNKNOWN}
+</pre>
+</aside>
+EOF

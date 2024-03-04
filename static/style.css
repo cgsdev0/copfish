@@ -1,0 +1,216 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#signature {
+  position: absolute;
+  z-index: 100;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#signature a {
+  text-decoration: none;
+}
+
+#signature a:hover {
+  text-decoration: underline;
+}
+
+#signature svg {
+  width: 36px;
+  height: 36px;
+  margin-top: -4px;
+  vertical-align: middle;
+}
+
+#form {
+  display: flex;
+  max-width: 400px;
+  flex-direction: column;
+}
+
+#count {
+  font-size: 24px;
+}
+
+img.newfish {
+  image-rendering: pixelated;
+}
+
+img.uncaught {
+  filter: brightness(0);
+  opacity: 50%;
+}
+
+div.fish {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+div.fish>.name {
+  position: absolute;
+  color: white;
+  background-color: black;
+  text-align: center;
+  border-radius: 8px;
+  padding: 0 2px;
+  /* max-height: 16px; */
+  /* max-width: 16px; */
+  z-index: 999;
+  top: 95%;
+  margin: 0 auto;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  padding: 8px;
+  min-width: 100%;
+  display: none;
+}
+
+div.fish>.count {
+  position: absolute;
+  color: white;
+  background-color: red;
+  text-align: center;
+  border-radius: 8px;
+  min-height: 16px;
+  min-width: 16px;
+  padding: 0 2px;
+  /* max-height: 16px; */
+  /* max-width: 16px; */
+  top: 0;
+  right: 0;
+  display: none;
+}
+
+div.fish:hover>.name {
+  display: inline-block;
+}
+
+div.fish:hover>.count {
+  display: inline-block;
+}
+
+div.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+content {
+  margin-bottom: 80px;
+  margin-left: 20px;
+  margin-top: 20px;
+  max-width: 900px;
+}
+
+aside#showcase {
+  box-sizing: border-box;
+  background-color: #ccc;
+  transition: min-width 0.4s, max-width 0.4s;
+  min-width: 0px;
+  max-width: 0px;
+  position: -webkit-sticky;
+  position: sticky;
+  height: 100vh;
+  padding: 8px;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  z-index: 200;
+}
+
+aside#showcase.expanded {
+  min-width: 300px;
+  max-width: 300px;
+}
+
+div.halloffame {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+div.halloffame>.famer {
+  order: 4;
+}
+
+.famer-inner {
+  width: 128px;
+}
+
+.famer-inner .caughtBy {
+  z-index: 90;
+  text-align: center;
+}
+
+.famer-inner .streak {
+  text-align: center;
+}
+
+div.halloffame :nth-child(1 of .famer) {
+  height: 380px;
+  order: 2;
+  text-align: center;
+  padding: 4px;
+}
+
+div.halloffame :nth-child(1 of .famer) .bar {
+  height: 180px;
+  width: 128px;
+  background-color: gold;
+}
+
+div.halloffame :nth-child(2 of .famer) {
+  max-height: 320px;
+  flex-basis: 35%;
+  order: 1;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px;
+  position: relative;
+  transform: translateY(60px);
+}
+
+div.halloffame :nth-child(2 of .famer) .caughtBy {
+  text-align: center;
+  width: 128px;
+  position: relative;
+  right: 4px;
+}
+
+div.halloffame :nth-child(2 of .famer) .bar {
+  height: 120px;
+  width: 128px;
+  background-color: silver;
+  position: absolute;
+  right: 4px;
+}
+
+div.halloffame :nth-child(3 of .famer) {
+  max-height: 260px;
+  flex-basis: 35%;
+  order: 3;
+  padding: 4px;
+  position: relative;
+  transform: translateY(120px);
+}
+
+div.halloffame :nth-child(3 of .famer) .bar {
+  height: 60px;
+  width: 128px;
+  background-color: brown;
+  position: absolute;
+  left: 4px;
+}
