@@ -25,12 +25,12 @@ BEGIN {
   {
     print "<div class=famer>";
     print "<div class=famer-inner>";
-    print "<div class=caughtBy><a href=\"/profile/"$4"\">"$4"</a></div>";
+    print "<div class=caughtBy><a href=\"/profile/"$5"\">"$5"</a></div>";
     print "<div class=streak>"$3"x Streak</div>";
     if ( $2 >= 5000 ) {
-      print "<img src=\"/static/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$2]"\" />" 
+      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"/static/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"clickable "g" "r[$2]"\" />" 
     } else {
-      print "<img src=\"/static/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\""r[$2]" newfish "g"\" />" 
+      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"/static/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"clickable "r[$2]" newfish "g"\" />" 
     }
     print "<div class=bar></div>";
     print "</div></div>";
@@ -45,10 +45,10 @@ htmx_page <<-EOF
   <h2>Hall of Fame</h2>
   <div class="halloffame">
 $({ echo '['; paste -sd',' hall-of-fame/json; echo ']'; } \
-  | jq -rc 'map(select(.fishId != null)) | sort_by(.stats.wins) | reverse | .[] | [.fishType, .fishId, .stats.wins, .caughtBy] | @tsv' \
+  | jq -rc 'map(select(.fishId != null)) | sort_by(.stats.wins) | reverse | .[] | [.fishType, .fishId, .stats.wins, .float, .caughtBy] | @tsv' \
   | tr ' ' '@' \
-  | sort -t$'\t' -sk4 -k3nr \
-  | uniq -f3 \
+  | sort -t$'\t' -sk5 -k3nr \
+  | uniq -f4 \
   | sort -t$'\t' -k3nr \
   | tr $'\t@' ', ' \
   | head -n9 \
