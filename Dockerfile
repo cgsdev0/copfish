@@ -2,7 +2,7 @@ FROM ubuntu
 
 ENV DEV false
 
-RUN apt-get update && apt-get install ucspi-tcp
+RUN apt-get update && apt-get -y install ucspi-tcp jq file
 
 EXPOSE 5125
 
