@@ -81,19 +81,19 @@ start_tau_websocket() {
                   reward=$(echo "$line" | jq -r '.event_data.reward.title');
                   case $reward in
                       "Good Rod")
-                          name=$who
+                          USER_NAME=$who
                           give_rod good 30 1>&2
                           ;;
                       "Admin Rod")
-                          name=$who
+                          USER_NAME=$who
                           give_rod admin 1 1>&2
                           ;;
                       "Super Rod")
-                          name=$who
+                          USER_NAME=$who
                           give_rod super 30 1>&2
                           ;;
                       "NULL Rod")
-                          name=$who
+                          USER_NAME=$who
                           give_rod null 1 1>&2
                           ;;
                   esac
