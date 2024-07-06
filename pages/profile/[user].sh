@@ -1,6 +1,6 @@
 
 
-PROFILE="$(urldecode "$(basename "${PATH_VARS['user']}")")"
+PROFILE="$(basename "$(urldecode "${PATH_VARS['user']}")")"
 
 total=$(cut -d' ' -f1 "$FISH_ROOT"/fish-by-rarity2/* | sort -nu | wc -l)
 count=$(cut -d',' -f1 "$FISH_ROOT/badcop_/$PROFILE" | sort -nu | wc -l)
@@ -37,11 +37,11 @@ BEGIN {
     }
     if ( $3 > 0 ) {
       print "<div class=count>"$3"</div>";
-    } 
+    }
   if ( $1 >= 5000 ) {
-    print "<img src=\"https://stream.cgs.dev/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />" 
+    print "<img src=\"https://stream.cgs.dev/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />"
   } else {
-  print "<img src=\"https://stream.cgs.dev/newfish/spr_fish_"$1"_x.png\" loading=lazy '"$ATTR"' class=\""r[$1]" newfish "g"\" />" 
+  print "<img src=\"https://stream.cgs.dev/newfish/spr_fish_"$1"_x.png\" loading=lazy '"$ATTR"' class=\""r[$1]" newfish "g"\" />"
 }
     print "</div>";
 }'

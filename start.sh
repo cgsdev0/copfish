@@ -3,6 +3,7 @@
 cd "${0%/*}"
 
 [[ -f 'config.sh' ]] && source config.sh
+source message_broker.sh
 
 if [[ "${DEV:-true}" == "true" ]] && [[ ! -z "$TAILWIND" ]]; then
    npx tailwindcss -i ./static/style.css -o ./static/tailwind.css --watch=always 2>&1 \
@@ -11,6 +12,7 @@ if [[ "${DEV:-true}" == "true" ]] && [[ ! -z "$TAILWIND" ]]; then
 fi
 
 if [[ "${DEV:-true}" != "true" ]]; then
+  start_message_broker &
   export ROUTES_CACHE=$(mktemp)
 fi
 

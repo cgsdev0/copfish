@@ -2,7 +2,7 @@
 header Content-Type text/plain
 end_headers
 
-PROFILE="$(urldecode "$(basename "${PATH_VARS['user']}")")"
+PROFILE="$(basename "$(urldecode "${PATH_VARS['user']}")")"
 
 cd "$FISH_ROOT/badcop_"
 if [[ ! -f "$PROFILE" ]]; then

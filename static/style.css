@@ -63,7 +63,7 @@ div.fish {
   cursor: pointer;
 }
 
-div.fish>.name {
+div.fish > .name {
   position: absolute;
   color: white;
   background-color: black;
@@ -82,7 +82,7 @@ div.fish>.name {
   display: none;
 }
 
-div.fish>.count {
+div.fish > .count {
   position: absolute;
   color: white;
   background-color: red;
@@ -98,12 +98,17 @@ div.fish>.count {
   display: none;
 }
 
-div.fish:hover>.name {
+div.fish:hover > .name {
   display: inline-block;
 }
 
-div.fish:hover>.count {
+div.fish:hover > .count {
   display: inline-block;
+}
+
+div.container2 {
+  display: flex;
+  flex-direction: column;
 }
 
 div.container {
@@ -122,7 +127,9 @@ content {
 aside#showcase {
   box-sizing: border-box;
   background-color: #ccc;
-  transition: min-width 0.4s, max-width 0.4s;
+  transition:
+    min-width 0.4s,
+    max-width 0.4s;
   min-width: 0px;
   max-width: 0px;
   position: -webkit-sticky;
@@ -145,7 +152,7 @@ div.halloffame {
   flex-wrap: wrap;
 }
 
-div.halloffame>.famer {
+div.halloffame > .famer {
   order: 4;
 }
 
