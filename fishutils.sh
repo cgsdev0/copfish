@@ -216,10 +216,11 @@ roll_stats() {
 }
 
 catch_fish() {
+    mkdir -p "$FISH_ROOT/fishing-cooldowns"
     cd "$FISH_ROOT/$CHAN"
     now=$(date +%s)
-    if [[ -f "$HOME/fishing-cooldowns/.$USER_NAME.cooldown" ]]; then
-        cooldown=$(cat "$HOME/fishing-cooldowns/.$USER_NAME.cooldown")
+    if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown" ]]; then
+        cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown")
         if [[ $cooldown -gt $now ]]; then
             echo "you are on cooldown for $((cooldown-now)) seconds"
             return
@@ -263,9 +264,9 @@ catch_fish() {
     echo "$fish_id,$fish,$fish_float,$stats_raw" >> "$FISH_ROOT/${CHAN}/$USER_NAME"
     if [[ "$USER_NAME" != "$CHAN" ]]; then
       if [[ "$IS_SUBSCRIBER" == "1" ]]; then
-        echo $(( now + 90 )) > "$HOME/fishing-cooldowns/.$USER_NAME.cooldown"
+        echo $(( now + 90 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown"
       else
-        echo $(( now + 120 )) > "$HOME/fishing-cooldowns/.$USER_NAME.cooldown"
+        echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown"
       fi
     fi
     if [[ $count -eq 0 ]]; then
