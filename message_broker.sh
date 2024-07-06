@@ -50,3 +50,74 @@ start_message_broker() {
     echo "IT CRASHED, RESTARTING"
   done
 }
+
+start_tau_websocket() {
+  CHAN="badcop_"
+
+  give_rod() {
+      rod_type="$1"
+      quantity="$2"
+      rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_NAME"
+      touch "$rod_file"
+      if grep -q "$rod_type" "$rod_file"; then
+          current_quantity=$(grep "$rod_type" "$rod_file" | cut -d' ' -f2)
+          new_quantity=$((current_quantity + quantity))
+          sed -i "s/$rod_type $current_quantity/$rod_type $new_quantity/" "$rod_file"
+      else
+          # Append
+          echo "$rod_type $quantity" >> "$rod_file"
+      fi
+  }
+
+  reqreader() {
+    while IFS= read -r line; do
+        # echo "$line" | jq
+        eventType=$(echo "$line" | jq -r '."event_type"');
+        event_key=$(echo "$line" | jq -r '."event"');
+        if [[ "$event_key" != "keep_alive" ]]; then
+          case $eventType in
+              "channel-channel_points_custom_reward_redemption-add")
+                  who=$(echo "$line" | jq -r '.event_data.user_name');
+                  reward=$(echo "$line" | jq -r '.event_data.reward.title');
+                  case $reward in
+                      "Good Rod")
+                          name=$who
+                          give_rod good 30 1>&2
+                          ;;
+                      "Admin Rod")
+                          name=$who
+                          give_rod admin 1 1>&2
+                          ;;
+                      "Super Rod")
+                          name=$who
+                          give_rod super 30 1>&2
+                          ;;
+                      "NULL Rod")
+                          name=$who
+                          give_rod null 1 1>&2
+                          ;;
+                  esac
+                  ;;
+          esac
+        fi
+    done
+  }
+
+  authenticate() {
+      echo '{"token":"'${TAU_TOKEN}'"}'
+      sleep infinity
+  }
+
+  set -o pipefail;
+  while true; do
+    authenticate \
+        | websocat -E wss://tau.cgs.dev/ws/twitch-events/ --ping-interval 10 --ping-timeout 15 \
+        | reqreader
+    FAILED=$?
+    echo "$FAILED"
+    if [[ "$FAILED" -ge 130 ]]; then
+      exit 0
+    fi
+    echo "IT CRASHED, RESTARTING"
+  done
+}

@@ -13,6 +13,7 @@ fi
 
 if [[ "${DEV:-true}" != "true" ]]; then
   start_message_broker &
+  start_tau_websocket &
   export ROUTES_CACHE=$(mktemp)
 fi
 

@@ -145,21 +145,6 @@ use_rod() {
     echo "$rod_name"
 }
 
-give_rod() {
-    rod_type="$1"
-    quantity="$2"
-    rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_NAME"
-    touch "$rod_file"
-    if grep -q "$rod_type" "$rod_file"; then
-        current_quantity=$(grep "$rod_type" "$rod_file" | cut -d' ' -f2)
-        new_quantity=$((current_quantity + quantity))
-        sed -i "s/$rod_type $current_quantity/$rod_type $new_quantity/" "$rod_file"
-    else
-        # Append
-        echo "$rod_type $quantity" >> "$rod_file"
-    fi
-}
-
 declare -A stats_speed=(
        ["common"]="1d20"
 ["fairly_common"]="1d20"
