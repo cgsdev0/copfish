@@ -76,6 +76,12 @@ start_tau_websocket() {
         event_key=$(echo "$line" | jq -r '."event"');
         if [[ "$event_key" != "keep_alive" ]]; then
           case $eventType in
+              "stream-offline")
+                  echo "OFFLINE" > "$FISH_ROOT/status"
+                  ;;
+              "stream-online")
+                  echo "ONLINE" > "$FISH_ROOT/status"
+                  ;;
               "channel-channel_points_custom_reward_redemption-add")
                   who=$(echo "$line" | jq -r '.event_data.user_name');
                   reward=$(echo "$line" | jq -r '.event_data.reward.title');

@@ -10,6 +10,12 @@ if [[ -z "$USER_ID" ]]; then
   return $(status_code 403)
 fi
 
+STATUS="$(cat "$FISH_ROOT/status")"
+if [[ "$STATUS" == "OFFLINE" ]]; then
+  echo "no offline fishing sorry"
+  return $(status_code 403)
+fi
+
 source fishutils.sh
 
 catch_fish
