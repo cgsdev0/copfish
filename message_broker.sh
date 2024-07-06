@@ -39,7 +39,7 @@ start_message_broker() {
 
   set -o pipefail;
   while true; do
-    {authenticate; reqreader < /tmp/tau_tunnel; } \
+    { authenticate; reqreader < /tmp/tau_tunnel; } \
         | websocat -E 'wss://tau.cgs.dev/ws/message-broker/' --ping-interval 10 --ping-timeout 15 \
         >/tmp/tau_tunnel;
     FAILED=$?
