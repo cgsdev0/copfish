@@ -74,7 +74,7 @@ SESSION[username]="$USER_NAME"
 
 save_session
 
-header Location /dashboard
+header Location /pond
 end_headers
 end_headers
 

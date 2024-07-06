@@ -19,7 +19,7 @@ EOF
 return $(status_code 200)
 fi
 
-header Location /dashboard
+header Location /pond
 end_headers
 end_headers
 
