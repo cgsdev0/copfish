@@ -12,8 +12,8 @@ fi
 
 STATUS="$(cat "$FISH_ROOT/status")"
 if [[ "$STATUS" == "OFFLINE" ]]; then
-  echo "no offline fishing sorry"
-  return $(status_code 403)
+  echo "no offline fishing, sorry"
+  return $(status_code 200)
 fi
 
 source fishutils.sh
