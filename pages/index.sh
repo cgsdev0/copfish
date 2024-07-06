@@ -28,9 +28,9 @@ BEGIN {
     print "<div class=caughtBy><a href=\"/profile/"$5"\">"$5"</a></div>";
     print "<div class=streak>"$3"x Streak</div>";
     if ( $2 >= 5000 ) {
-      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"clickable "g" "r[$2]"\" />" 
+      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"clickable "g" "r[$2]"\" />"
     } else {
-      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"clickable "r[$2]" newfish "g"\" />" 
+      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"clickable "r[$2]" newfish "g"\" />"
     }
     print "<div class=bar></div>";
     print "</div></div>";
@@ -39,6 +39,8 @@ BEGIN {
 
 
 htmx_page <<-EOF
+<div hx-ext="sse" sse-connect="/stream" sse-swap="fish" hx-swap="beforeend">
+</div>
 <div class="container">
 <content>
   <h1>${PROJECT_NAME}</h1>

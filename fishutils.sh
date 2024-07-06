@@ -1,7 +1,31 @@
 CHAN=badcop_
 
+
 tbus_send() {
+    function publish() {
+      local TOPIC
+      local line
+      TOPIC="$1"
+      if [[ -z "$TOPIC" ]]; then
+        return
+      fi
+      if [[ ! -d "pubsub/${TOPIC}" ]]; then
+        return
+      fi
+      TEE_ARGS=$(find pubsub/"${TOPIC}" -type p)
+      if [[ -z "$TEE_ARGS" ]]; then
+        return
+      fi
+      tee $TEE_ARGS > /dev/null
+    }
+
+    event() {
+      printf "event: %s\ndata: %s\n\n" "$@"
+    }
+
+    event "fish" '{"message_type":"'$1'","source":"bash","data":'"${2:-\{\}}"'}' | publish stream
     echo 'SYSTEM_EV {"message_type":"'$1'","source":"bash","data":'${2:-\{\}}'}' > /tmp/tau_tunnel
+
 }
 
 send_twitch_msg() {
@@ -202,15 +226,16 @@ roll_stats() {
 
 catch_fish() {
     mkdir -p "$FISH_ROOT/fishing-cooldowns"
-    cd "$FISH_ROOT/$CHAN"
+
+    pushd "$FISH_ROOT/$CHAN" &> /dev/null
     now=$(date +%s)
-    if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown" ]]; then
-        cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown")
-        if [[ $cooldown -gt $now ]]; then
-            echo "you are on cooldown for $((cooldown-now)) seconds"
-            return
-        fi
-    fi
+    # if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown" ]]; then
+    #     cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown")
+    #     if [[ $cooldown -gt $now ]]; then
+    #         echo "you are on cooldown for $((cooldown-now)) seconds"
+    #         return
+    #     fi
+    # fi
     fishing_rod="$(use_rod)"
     if [[ ! -f "$FISH_ROOT/fishing-rods/${fishing_rod}" ]]; then
         echo "You have an invalid fishing rod!"
@@ -256,6 +281,7 @@ catch_fish() {
         echo "@$USER_NAME caught $description $fish ($class_pretty)! ($rarity% rarity) ($fishing_rod rod used)"
     fi
     FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
+    popd &> /dev/null
     tbus_send "fish-catch" "$FISH_JSON"
     if [[ "$(fishdex check)" != "$PRECHECK" ]]; then
       send_twitch_msg "@$USER_NAME HAS COMPLETED THEIR FISHDEX!!!!!!!!"
