@@ -262,13 +262,8 @@ catch_fish() {
     rarity=$(bc <<< "scale=2; 100 - ( $count / $most_count * 100 )")
 
     echo "$fish_id,$fish,$fish_float,$stats_raw" >> "$FISH_ROOT/${CHAN}/$USER_NAME"
-    if [[ "$USER_NAME" != "$CHAN" ]]; then
-      if [[ "$IS_SUBSCRIBER" == "1" ]]; then
-        echo $(( now + 90 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown"
-      else
-        echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown"
-      fi
-    fi
+    echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown"
+
     if [[ $count -eq 0 ]]; then
         description="THE FIRST"
         echo "@$USER_NAME caught and DISCOVERED $description $fish ($class_pretty)! ( never caught before :O ) ($fishing_rod rod used)"
