@@ -134,7 +134,7 @@ show_loot_tables() {
 }
 
 get_rod() {
-    rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_NAME"
+    rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_ID"
     touch "$rod_file"
     usable_rods=$(grep ' [1-9][0-9]*$' "$rod_file" | cut -d' ' -f1)
     best_rod="old"
@@ -160,7 +160,7 @@ get_rod() {
 }
 
 use_rod() {
-    rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_NAME"
+    rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_ID"
     rod="$(get_rod)"
     rod_name=$(echo "$rod" | cut -d' ' -f1)
     rod_uses=$(echo "$rod" | cut -d' ' -f2)
@@ -229,13 +229,13 @@ catch_fish() {
 
     pushd "$FISH_ROOT/$CHAN" &> /dev/null
     now=$(date +%s)
-    # if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown" ]]; then
-    #     cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown")
-    #     if [[ $cooldown -gt $now ]]; then
-    #         echo "you are on cooldown for $((cooldown-now)) seconds"
-    #         return
-    #     fi
-    # fi
+    if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown" ]]; then
+        cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown")
+        if [[ $cooldown -gt $now ]]; then
+            echo "you are on cooldown for $((cooldown-now)) seconds"
+            return
+        fi
+    fi
     fishing_rod="$(use_rod)"
     if [[ ! -f "$FISH_ROOT/fishing-rods/${fishing_rod}" ]]; then
         echo "You have an invalid fishing rod!"
@@ -263,16 +263,16 @@ catch_fish() {
         | cut -d' ' -f1)
     count=$(find * -maxdepth 0 -type f | xargs cut -d',' -f1 | grep "^${fish_id}$" | wc -l)
     description="a"
-    touch "$FISH_ROOT/${CHAN}/$USER_NAME"
-    personalcount=$(cut -d',' -f1 "$FISH_ROOT/${CHAN}/$USER_NAME" | grep "$fish_id" | wc -l)
+    touch "$FISH_ROOT/${CHAN}/$USER_ID"
+    personalcount=$(cut -d',' -f1 "$FISH_ROOT/${CHAN}/$USER_ID" | grep "$fish_id" | wc -l)
     if [[ $personalcount -eq 0 ]]; then
         description="their first"
     fi
 
     rarity=$(bc <<< "scale=2; 100 - ( $count / $most_count * 100 )")
 
-    echo "$fish_id,$fish,$fish_float,$stats_raw" >> "$FISH_ROOT/${CHAN}/$USER_NAME"
-    echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_NAME.cooldown"
+    echo "$fish_id,$fish,$fish_float,$stats_raw" >> "$FISH_ROOT/${CHAN}/$USER_ID"
+    echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown"
 
     if [[ $count -eq 0 ]]; then
         description="THE FIRST"
@@ -280,7 +280,7 @@ catch_fish() {
     else
         echo "@$USER_NAME caught $description $fish ($class_pretty)! ($rarity% rarity) ($fishing_rod rod used)"
     fi
-    FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
+    FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","twitch_id":'$USER_ID',"id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
     popd &> /dev/null
     tbus_send "fish-catch" "$FISH_JSON"
     if [[ "$(fishdex check)" != "$PRECHECK" ]]; then
@@ -313,8 +313,8 @@ fishdex_check() {
 fishdex() {
     cd "$FISH_ROOT/$CHAN"
     total=$(cut -d' ' -f1 $FISH_ROOT/fish-by-rarity2/* | sort -nu | wc -l)
-    touch "$FISH_ROOT/${CHAN}/$USER_NAME"
-    count=$(cut -d',' -f1 "$FISH_ROOT/${CHAN}/$USER_NAME" | sort -nu | wc -l)
+    touch "$FISH_ROOT/${CHAN}/$USER_ID"
+    count=$(cut -d',' -f1 "$FISH_ROOT/${CHAN}/$USER_ID" | sort -nu | wc -l)
     if [[ -z "$1" ]]; then
       echo "@$USER_NAME has caught $count out of $total possible fish!"
     else
