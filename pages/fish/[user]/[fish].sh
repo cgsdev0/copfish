@@ -1,7 +1,10 @@
 
 
-PROFILE="$(sanitize "${PATH_VARS['user']}")"
-FISH="$(sanitize "${PATH_VARS['fish']}")"
+PROFILE="$(isanitize "${PATH_VARS['user']}")"
+FISH="$(isanitize "${PATH_VARS['fish']}")"
+
+declare -A USERNAME_CACHE
+load_cache
 
 cd "$FISH_ROOT/badcop_"
 FISH_ROW="$(grep -E "^[^,]+,[^,]+,$FISH," "$PROFILE")"
@@ -44,7 +47,7 @@ RARITY="${RARITY//_/ }"
 htmx_page <<-EOF
 <aside id="showcase" class="expanded">
 <button onclick="showcase.classList.remove('expanded'); showcase.innerHTML='';">X</button>
-<h1>${PROFILE}'s Fish</h1>
+<h1>${USERNAME_CACHE[$PROFILE]}'s Fish</h1>
 $(echo "${FISH_DATA[0]},${FISH_DATA[1]}" | fish_images)
 <pre>
 ID:       ${FISH_DATA[0]}

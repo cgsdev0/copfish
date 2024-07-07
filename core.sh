@@ -18,7 +18,7 @@ debug() {
 }
 
 if [[ "${DEV:-true}" == true ]]; then
-  USE_HMR="$(which inotifywait)"
+  # USE_HMR="$(which inotifywait)"
 
   # disable HMR when using netcat
   if [[ "$TCP_PROVIDER" == "nc" ]]; then
@@ -446,7 +446,14 @@ writeHttpResponse() {
 
 
   if directive_test=$(head -1 "pages/${ROUTE_SCRIPT}"); then
-    if [[ "$directive_test" == "# sse" ]]; then
+    if [[ "$directive_test" == "# stream" ]]; then
+      respond 200 OK
+      header Content-Type "text/html"
+      header Transfer-Encoding chunked
+      end_headers
+      source "pages/${ROUTE_SCRIPT}"
+      return
+    elif [[ "$directive_test" == "# sse" ]]; then
       respond 200 OK
       header Content-Type "text/event-stream"
       end_headers

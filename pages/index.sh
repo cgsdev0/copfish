@@ -1,8 +1,13 @@
 
-source config.sh
+declare -A USERNAME_CACHE
+load_cache
 
 table_row() {
-  awk '{ print "<tr><td><a href=\"profile/"$2"\">"$2"</a></td><td>"$1"</td></tr>" }'
+  local COUNT ID
+  while IFS= read -r line; do
+    read COUNT ID <<< "$line"
+    echo "<tr><td><a href=\"profile/$ID\">${USERNAME_CACHE[$ID]:-twitch_user:$ID}</a></td><td>$COUNT</td></tr>"
+  done
 }
 cd "$FISH_ROOT/badcop_"
 
@@ -18,14 +23,17 @@ rarity_table() {
 RARITY_TABLE="$(rarity_table)"
 
 fish_images() {
-  awk -F, '
+  while IFS= read -r line; do
+    E="${line##*,}"
+    printf "$line, ${USERNAME_CACHE[$E]}\n"
+  done | awk -F, '
 BEGIN {
 '"$RARITY_TABLE"'
 }
   {
     print "<div class=famer>";
     print "<div class=famer-inner>";
-    print "<div class=caughtBy><a href=\"/profile/"$5"\">"$5"</a></div>";
+    print "<div class=caughtBy><a href=\"/profile/"$5"\">"$6"</a></div>";
     print "<div class=streak>"$3"x Streak</div>";
     if ( $2 >= 5000 ) {
       print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"clickable "g" "r[$2]"\" />"
@@ -47,7 +55,7 @@ htmx_page <<-EOF
   <h2>Hall of Fame</h2>
   <div class="halloffame">
 $({ echo '['; paste -sd',' hall-of-fame/json; echo ']'; } \
-  | jq -rc 'map(select(.fishId != null)) | sort_by(.stats.wins) | reverse | .[] | [.fishType, .fishId, .stats.wins, .float, .caughtBy] | @tsv' \
+  | jq -rc 'map(select(.fishId != null)) | sort_by(.stats.wins) | reverse | .[] | [.fishType, .fishId, .stats.wins, .float, .twitchID] | @tsv' \
   | tr ' ' '@' \
   | sort -t$'\t' -sk5 -k3nr \
   | uniq -f4 \

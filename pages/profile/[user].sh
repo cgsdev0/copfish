@@ -1,5 +1,8 @@
 
-PROFILE="$(sanitize "${PATH_VARS['user']}")"
+PROFILE="$(isanitize "${PATH_VARS['user']}")"
+
+declare -A USERNAME_CACHE
+load_cache
 
 total=$(cut -d' ' -f1 "$FISH_ROOT"/fish-by-rarity2/* | sort -nu | wc -l)
 count=$(cut -d',' -f1 "$FISH_ROOT/badcop_/$PROFILE" | sort -nu | wc -l)
@@ -23,7 +26,7 @@ BEGIN {
 }
   {
     if ( $3 == "" ) {
-      print "<div hx-target=\"#showcase\" hx-swap=\"outerHTML\" hx-get=\"/fish/'"ENVIRON[\"PROFILE\"]"'/"$4"\" class=\"clickable fish\">";
+      printf "<div hx-target=\"#showcase\" hx-swap=\"outerHTML\" hx-get=\"/fish/"'$PROFILE'"/"$4"\" class=\"clickable fish\">";
     } else {
       print "<div class=fish>";
     }
@@ -67,7 +70,7 @@ fishdex() {
 uncaught_fish() {
     diff <(cut -d',' -f1-2 "$PROFILE" | sort -nu) <(cat "$FISH_ROOT"/fish-by-rarity2/* | sed 's/ /,/' | sort -nu) | grep '>' | sed 's/^> //;s/$/,0/' | fish_images
 }
-famous=$(jq -r '.caughtBy' "$FISH_ROOT/badcop_/hall-of-fame/json" | grep "^$PROFILE$" | wc -l)
+famous=$(jq -r '.twitchID' "$FISH_ROOT/badcop_/hall-of-fame/json" | grep "^$PROFILE$" | wc -l)
 
 if [[ "${QUERY_PARAMS['load']}" == "rest" ]]; then
   htmx_page <<-EOF
@@ -79,7 +82,7 @@ htmx_page <<-EOF
 <div class="container">
 <content>
 <a href="/">&larr; Back to Home</a>
-<h1>${PROFILE}'s Profile</h1>
+<h1>${USERNAME_CACHE[$PROFILE]}'s Profile</h1>
 <p>Hall of Famers: $famous</p>
 <h2>Fishdex</h2>
 <p>Species Caught: $count / $total</p>
