@@ -1,7 +1,7 @@
 
 
-PROFILE="$(basename "$(urldecode "${PATH_VARS['user']}")")"
-FISH="$(basename "${PATH_VARS['fish']}")"
+PROFILE="$(sanitize "${PATH_VARS['user']}")"
+FISH="$(sanitize "${PATH_VARS['fish']}")"
 
 cd "$FISH_ROOT/badcop_"
 FISH_ROW="$(grep -E "^[^,]+,[^,]+,$FISH," "$PROFILE")"

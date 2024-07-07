@@ -1,6 +1,5 @@
 
-
-PROFILE="$(basename "$(urldecode "${PATH_VARS['user']}")")"
+PROFILE="$(sanitize "${PATH_VARS['user']}")"
 
 total=$(cut -d' ' -f1 "$FISH_ROOT"/fish-by-rarity2/* | sort -nu | wc -l)
 count=$(cut -d',' -f1 "$FISH_ROOT/badcop_/$PROFILE" | sort -nu | wc -l)
@@ -24,7 +23,7 @@ BEGIN {
 }
   {
     if ( $3 == "" ) {
-      print "<div hx-target=\"#showcase\" hx-swap=\"outerHTML\" hx-get=\"/fish/'"$PROFILE"'/"$4"\" class=\"clickable fish\">";
+      print "<div hx-target=\"#showcase\" hx-swap=\"outerHTML\" hx-get=\"/fish/'"ENVIRON[\"PROFILE\"]"'/"$4"\" class=\"clickable fish\">";
     } else {
       print "<div class=fish>";
     }

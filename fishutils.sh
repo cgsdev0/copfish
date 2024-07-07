@@ -23,8 +23,8 @@ tbus_send() {
       printf "event: %s\ndata: %s\n\n" "$@"
     }
 
-    event "fish" '{"message_type":"'$1'","source":"bash","data":'"${2:-\{\}}"'}' | publish stream
-    echo 'SYSTEM_EV {"message_type":"'$1'","source":"bash","data":'${2:-\{\}}'}' > /tmp/tau_tunnel
+    event "fish" '{"message_type":"'"$1"'","source":"bash","data":'"${2:-\{\}}"'}' | publish stream
+    echo 'SYSTEM_EV {"message_type":"'"$1"'","source":"bash","data":'"${2:-\{\}}"'}' > /tmp/tau_tunnel
 
 }
 

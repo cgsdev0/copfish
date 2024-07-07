@@ -68,6 +68,14 @@ urlencode() {
     printf '\n'
 }
 
+function htmlencode() {
+  : "${1//&/&amp;}"
+  : "${_//</&lt;}"
+  : "${_//>/&gt;}"
+  : "${_//\"/&quot;}"
+  printf '%s' "$_"
+}
+
 urldecode() {
     # Usage: urldecode "string"
     : "${1//+/ }"
