@@ -4,7 +4,7 @@ end_headers
 
 PROFILE="$(sanitize "${PATH_VARS['user']}")"
 declare -A USERID_CACHE
-load_cache
+load_id_cache
 
 USERNAME="${USERID_CACHE[${PROFILE,,}]}"
 

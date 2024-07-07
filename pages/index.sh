@@ -1,6 +1,6 @@
 
 declare -A USERNAME_CACHE
-load_cache
+load_user_cache
 
 table_row() {
   local COUNT ID

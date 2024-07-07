@@ -12,15 +12,23 @@ sanitize() {
   printf '%s' "$_"
 }
 
-function load_cache() {
+function load_user_cache() {
   local USER_ID
   local USER_NAME
   while read -r USER_ID USER_NAME; do
     USERNAME_CACHE[$USER_ID]=$USER_NAME
+  done < "$FISH_ROOT/data/username_cache"
+}
+export -f load_user_cache
+
+function load_id_cache() {
+  local USER_ID
+  local USER_NAME
+  while read -r USER_ID USER_NAME; do
     USERID_CACHE[${USER_NAME,,}]=$USER_ID
   done < "$FISH_ROOT/data/username_cache"
 }
-export -f load_cache
+export -f load_id_cache
 
 
 isanitize() {

@@ -4,7 +4,7 @@ PROFILE="$(isanitize "${PATH_VARS['user']}")"
 FISH="$(isanitize "${PATH_VARS['fish']}")"
 
 declare -A USERNAME_CACHE
-load_cache
+load_user_cache
 
 cd "$FISH_ROOT/badcop_"
 FISH_ROW="$(grep -E "^[^,]+,[^,]+,$FISH," "$PROFILE")"

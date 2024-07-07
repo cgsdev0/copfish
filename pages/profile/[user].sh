@@ -2,7 +2,7 @@
 PROFILE="$(isanitize "${PATH_VARS['user']}")"
 
 declare -A USERNAME_CACHE
-load_cache
+load_user_cache
 
 total=$(cut -d' ' -f1 "$FISH_ROOT"/fish-by-rarity2/* | sort -nu | wc -l)
 count=$(cut -d',' -f1 "$FISH_ROOT/badcop_/$PROFILE" | sort -nu | wc -l)
