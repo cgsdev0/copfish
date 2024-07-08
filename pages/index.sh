@@ -31,20 +31,36 @@ BEGIN {
 '"$RARITY_TABLE"'
 }
   {
-    print "<div class=famer>";
-    print "<div class=famer-inner>";
-    print "<div class=caughtBy><a href=\"/profile/"$5"\">"$6"</a></div>";
-    print "<div class=streak>"$3"x Streak</div>";
+    printf "%s","<div class=famer>";
+    printf "%s","<div class=famer-inner>";
+    printf "%s","<div class=caughtBy><a href=\"/profile/"$5"\">"$6"</a></div>";
+    printf "%s","<div class=streak>"$3"x Streak</div>";
     if ( $2 >= 5000 ) {
-      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"clickable "g" "r[$2]"\" />"
+      printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"clickable "g" "r[$2]"\" />"
     } else {
-      print "<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"clickable "r[$2]" newfish "g"\" />"
+      printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$5"/"$4"\" src=\"https://stream.cgs.dev/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"clickable "r[$2]" newfish "g"\" />"
     }
-    print "<div class=bar></div>";
+    printf "%s","<div class=bar></div>";
     print "</div></div>";
 }'
 }
 
+hall_of_fame() {
+  ROWS="$({ echo '['; paste -sd',' hall-of-fame/json; echo ']'; } \
+    | jq -rc 'map(select(.fishId != null)) | sort_by(.stats.wins) | reverse | .[] | [.fishType, .fishId, .stats.wins, .float, .twitchID] | @tsv' \
+    | tr ' ' '@' \
+    | sort -t$'\t' -sk5 -k3nr \
+    | uniq -f4 \
+    | sort -t$'\t' -k3nr \
+    | tr $'\t@' ', ' \
+    | head -n9 \
+    | fish_images)"
+  echo "<div class='stand'>"
+  echo "$ROWS" | sed -n '2p;1p;3p'
+  echo "</div><div class='runnerups'>"
+  echo "$ROWS" | tail -n6
+  echo "</div>"
+}
 
 htmx_page <<-EOF
 <div hx-ext="sse" sse-connect="/stream" sse-swap="fish" hx-swap="beforeend">
@@ -54,16 +70,8 @@ htmx_page <<-EOF
   <h1>${PROJECT_NAME}</h1>
   <h2>Hall of Fame</h2>
   <div class="halloffame">
-$({ echo '['; paste -sd',' hall-of-fame/json; echo ']'; } \
-  | jq -rc 'map(select(.fishId != null)) | sort_by(.stats.wins) | reverse | .[] | [.fishType, .fishId, .stats.wins, .float, .twitchID] | @tsv' \
-  | tr ' ' '@' \
-  | sort -t$'\t' -sk5 -k3nr \
-  | uniq -f4 \
-  | sort -t$'\t' -k3nr \
-  | tr $'\t@' ', ' \
-  | head -n9 \
-  | fish_images)
-</div>
+  $(hall_of_fame)
+  </div>
   <h2>Most Complete Fishdexes</h2>
   <div hx-get="/fishdex_best" hx-trigger="load">Loading...</div>
   <h2>Fishers</h2>

@@ -150,10 +150,40 @@ aside#showcase.expanded {
 div.halloffame {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+}
+div.halloff12ame .stand {
+  display: flex;
+  flex-direction: row;
+}
+div.halloffame .stand .famer:nth-child(1) .bar {
+  height: 120px;
+  background-color: silver;
+}
+div.halloffame .stand .famer:nth-child(2) .bar {
+  height: 180px;
+  background-color: gold;
+}
+div.halloffame .stand .famer:nth-child(3) .bar {
+  height: 60px;
+  background-color: brown;
 }
 
-div.halloffame > .famer {
-  order: 4;
+div.stand {
+  display: flex;
+  margin-bottom: 24px;
+}
+div.famer {
+  display: flex;
+  align-items: flex-end;
+}
+
+div.halloffame .runnerups {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .famer-inner {
@@ -167,61 +197,4 @@ div.halloffame > .famer {
 
 .famer-inner .streak {
   text-align: center;
-}
-
-div.halloffame :nth-child(1 of .famer) {
-  height: 380px;
-  order: 2;
-  text-align: center;
-  padding: 4px;
-}
-
-div.halloffame :nth-child(1 of .famer) .bar {
-  height: 180px;
-  width: 128px;
-  background-color: gold;
-}
-
-div.halloffame :nth-child(2 of .famer) {
-  max-height: 320px;
-  flex-basis: 35%;
-  order: 1;
-  text-align: right;
-  display: flex;
-  justify-content: flex-end;
-  padding: 4px;
-  position: relative;
-  transform: translateY(60px);
-}
-
-div.halloffame :nth-child(2 of .famer) .caughtBy {
-  text-align: center;
-  width: 128px;
-  position: relative;
-  right: 4px;
-}
-
-div.halloffame :nth-child(2 of .famer) .bar {
-  height: 120px;
-  width: 128px;
-  background-color: silver;
-  position: absolute;
-  right: 4px;
-}
-
-div.halloffame :nth-child(3 of .famer) {
-  max-height: 260px;
-  flex-basis: 35%;
-  order: 3;
-  padding: 4px;
-  position: relative;
-  transform: translateY(120px);
-}
-
-div.halloffame :nth-child(3 of .famer) .bar {
-  height: 60px;
-  width: 128px;
-  background-color: brown;
-  position: absolute;
-  left: 4px;
 }
