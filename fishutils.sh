@@ -254,17 +254,17 @@ catch_fish() {
     fish_float="${RNG// /}"
 
     most_count=$(find * -maxdepth 0 -type f \
-        | xargs cut -d',' -f1 \
+        | xargs cut -d',' -f2 \
         | sort \
         | uniq -c \
         | sort -nr \
         | head -n 1 \
         | grep -oE '[0-9].*' \
         | cut -d' ' -f1)
-    count=$(find * -maxdepth 0 -type f | xargs cut -d',' -f1 | grep "^${fish_id}$" | wc -l)
+    count=$(find * -maxdepth 0 -type f | xargs cut -d',' -f2 | grep "^${fish_id}$" | wc -l)
     description="a"
     touch "$FISH_ROOT/${CHAN}/$USER_ID"
-    personalcount=$(cut -d',' -f1 "$FISH_ROOT/${CHAN}/$USER_ID" | grep "$fish_id" | wc -l)
+    personalcount=$(cut -d',' -f2 "$FISH_ROOT/${CHAN}/$USER_ID" | grep "$fish_id" | wc -l)
     if [[ $personalcount -eq 0 ]]; then
         description="their first"
     fi
@@ -297,7 +297,7 @@ uncaught_fish() {
 fishdex_all() {
     cd "$FISH_ROOT/$CHAN"
     total=$(cut -d' ' -f1 $FISH_ROOT/fish-by-rarity2/* | sort -nu | wc -l)
-    count=$(find * -maxdepth 0 -type f | xargs cut -d',' -f1 | sort -nu | wc -l)
+    count=$(find * -maxdepth 0 -type f | xargs cut -d',' -f2 | sort -nu | wc -l)
     echo "$count out of $total possible fish have been caught."
 }
 
@@ -315,7 +315,7 @@ fishdex() {
     cd "$FISH_ROOT/$CHAN"
     total=$(cut -d' ' -f1 $FISH_ROOT/fish-by-rarity2/* | sort -nu | wc -l)
     touch "$FISH_ROOT/${CHAN}/$USER_ID"
-    count=$(cut -d',' -f1 "$FISH_ROOT/${CHAN}/$USER_ID" | sort -nu | wc -l)
+    count=$(cut -d',' -f2 "$FISH_ROOT/${CHAN}/$USER_ID" | sort -nu | wc -l)
     if [[ -z "$1" ]]; then
       echo "@$USER_NAME has caught $count out of $total possible fish!"
     else

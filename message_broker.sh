@@ -17,15 +17,15 @@ start_message_broker() {
         case $MESSAGE_TYPE in
           "fish-champion")
             wins="$(echo "$line" | jq -cr '.data.stats.wins')"
-            caughtBy="$(echo "$line" | jq -cr '.data.caughtBy')"
+            twitchID="$(echo "$line" | jq -cr '.data.twitchID')"
             fishfloat="$(echo "$line" | jq -cr '.data.float')"
-            echo "$wins $caughtBy $fishfloat" 1>&2
+            echo "$wins $twitchID $fishfloat" 1>&2
             if [[ "$wins" -ge 10 ]]; then
               mkdir -p "$FISH_ROOT/$CHAN/hall-of-fame"
               echo "$line" | jq -cr '.data' >> "$FISH_ROOT/$CHAN/hall-of-fame/json"
             fi
             # update our fish in the database
-            sed -i '/^[^,]\+,[^,]\+,'$fishfloat',[^,]\+,[^,]\+,[^,]\+,[^,]\+$/s/\(.*\)/\1,'$wins'/' "$FISH_ROOT/$CHAN/$caughtBy"
+            sed -i '/^[^,]\+,[^,]\+,[^,]\+,'$fishfloat',[^,]\+,[^,]\+,[^,]\+,[^,]\+$/s/\(.*\)/\1,'$wins'/' "$FISH_ROOT/$CHAN/$twitchID"
           ;;
         esac
       fi
