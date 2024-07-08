@@ -73,7 +73,7 @@ htmx_page <<-EOF
   $(hall_of_fame)
   </div>
   <h2>Most Complete Fishdexes</h2>
-  <div hx-get="/fishdex_best" hx-trigger="load">Loading...</div>
+  <div hx-get="/cached/fishdex_best" hx-trigger="load">Loading...</div>
   <h2>Fishers</h2>
   <table>
 $(find . -maxdepth 1 -type f \
