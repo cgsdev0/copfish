@@ -5,7 +5,7 @@ declare -A USERNAME_CACHE
 load_user_cache
 
 total=$(cut -d' ' -f1 "$FISH_ROOT"/fish-by-rarity2/* | sort -nu | wc -l)
-count=$(cut -d',' -f1 "$FISH_ROOT/badcop_/$PROFILE" | sort -nu | wc -l)
+count=$(cut -d',' -f2 "$FISH_ROOT/badcop_/$PROFILE" | sort -nu | wc -l)
 cd "$FISH_ROOT/badcop_"
 
 ATTR='width=64 height=64'
@@ -49,15 +49,15 @@ BEGIN {
 }'
 }
 fresh_catches() {
-  tac "$PROFILE" | head -n 26 | sed 's/^\([^,]*,[^,]*,\)/\1,/' | fish_images
+  tac "$PROFILE" | head -n 26 | sed 's/^[^,]*,\([^,]*,[^,]*,\)/\1,/' | fish_images
 }
 
 fresh_catches_all() {
-  tac "$PROFILE" | sed 's/^\([^,]*,[^,]*,\)/\1,/' | fish_images
+  tac "$PROFILE" | sed 's/^[^,]*,\([^,]*,[^,]*,\)/\1,/' | fish_images
 }
 
 fishdex() {
-  cut -d',' -f1-2 $PROFILE \
+  cut -d',' -f2-3 $PROFILE \
     | sort -n \
     | uniq -c \
     | tr -s ' ' \

@@ -14,6 +14,9 @@ STATUS="$(cat "$FISH_ROOT/status")"
 if [[ "$STATUS" == "OFFLINE" ]]; then
   echo "no offline fishing, sorry"
   return $(status_code 200)
+elif [[ "$STATUS" != "ONLINE" ]]; then
+  echo "can't fish because of $STATUS"
+  return $(status_code 200)
 fi
 
 source fishutils.sh

@@ -14,5 +14,5 @@ if [[ ! -f "$FISH_ROOT/badcop_/$USERNAME" ]]; then
 fi
 
 total=$(cut -d' ' -f1 "$FISH_ROOT"/fish-by-rarity2/* | sort -nu | wc -l)
-count=$(cut -d',' -f1 "$FISH_ROOT/badcop_/$USERNAME" | sort -nu | wc -l)
+count=$(cut -d',' -f2 "$FISH_ROOT/badcop_/$USERNAME" | sort -nu | wc -l)
 echo $count $total

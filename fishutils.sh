@@ -271,7 +271,8 @@ catch_fish() {
 
     rarity=$(bc <<< "scale=2; 100 - ( $count / $most_count * 100 )")
 
-    echo "$fish_id,$fish,$fish_float,$stats_raw" >> "$FISH_ROOT/${CHAN}/$USER_ID"
+    timestamp="$(date '+%s')"
+    echo "$timestamp,$fish_id,$fish,$fish_float,$stats_raw" >> "$FISH_ROOT/${CHAN}/$USER_ID"
     echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown"
 
     if [[ $count -eq 0 ]]; then

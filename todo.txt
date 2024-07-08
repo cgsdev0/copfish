@@ -1,0 +1,4 @@
+- [ ] live updating feed of fish being caught
+- [ ] make the site look more good
+- [ ] add more features to the dashboard
+- [ ] pixel art for fishes

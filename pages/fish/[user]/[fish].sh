@@ -7,7 +7,7 @@ declare -A USERNAME_CACHE
 load_user_cache
 
 cd "$FISH_ROOT/badcop_"
-FISH_ROW="$(grep -E "^[^,]+,[^,]+,$FISH," "$PROFILE")"
+FISH_ROW="$(grep -E "^[^,]+,[^,]+,[^,]+,$FISH," "$PROFILE")"
 
 IFS=$'\n' read -d "" -ra FISH_DATA <<< "${FISH_ROW//,/$'\n'}"
 
@@ -39,7 +39,7 @@ BEGIN {
 }
 
 RARITY="$(echo "$RARITY_TABLE" \
-  | grep "r\[${FISH_DATA[0]}\]" \
+  | grep "r\[${FISH_DATA[1]}\]" \
   | cut -d'=' -f2 \
   | tr -d '";')"
 RARITY="${RARITY//_/ }"
@@ -48,17 +48,17 @@ htmx_page <<-EOF
 <aside id="showcase" class="expanded">
 <button onclick="showcase.classList.remove('expanded'); showcase.innerHTML='';">X</button>
 <h1>${USERNAME_CACHE[$PROFILE]}'s Fish</h1>
-$(echo "${FISH_DATA[0]},${FISH_DATA[1]}" | fish_images)
+$(echo "${FISH_DATA[1]},${FISH_DATA[2]}" | fish_images)
 <pre>
-ID:       ${FISH_DATA[0]}
-NAME:     ${FISH_DATA[1]}
-SEED:     ${FISH_DATA[2]}
+ID:       ${FISH_DATA[1]}
+NAME:     ${FISH_DATA[2]}
+SEED:     ${FISH_DATA[3]}
 RARITY:   ${RARITY^}
-HP:       ${FISH_DATA[3]}
-BASE_DMG: ${FISH_DATA[4]}
-VAR_DMG:  ${FISH_DATA[5]}
-SPEED:    ${FISH_DATA[6]}
-WINS:     ${FISH_DATA[7]:-UNKNOWN}
+HP:       ${FISH_DATA[4]}
+BASE_DMG: ${FISH_DATA[5]}
+VAR_DMG:  ${FISH_DATA[6]}
+SPEED:    ${FISH_DATA[7]}
+WINS:     ${FISH_DATA[8]:-UNKNOWN}
 </pre>
 </aside>
 EOF

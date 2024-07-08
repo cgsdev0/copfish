@@ -15,7 +15,7 @@ htmx_page <<-EOF
 <table>
 $(find . -maxdepth 1 -type f \
   | tr -d './' \
-  | xargs -I {} bash -c "echo -n {}' '; cut -d',' -f1 {} | sort -u | wc -l" \
+  | xargs -I {} bash -c "echo -n {}' '; cut -d',' -f2 {} | sort -u | wc -l" \
   | sort -k2nr \
   | head -n 5 \
   | table_row)
