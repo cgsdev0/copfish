@@ -3,6 +3,9 @@ header Content-Type text/plain
 end_headers
 
 PROFILE="$(sanitize "${PATH_VARS['user']}")"
+if [[ -z "$PROFILE" ]]; then
+  return $(status_code 404)
+fi
 declare -A USERID_CACHE
 load_id_cache
 

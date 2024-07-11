@@ -2,6 +2,9 @@
 
 PROFILE="$(isanitize "${PATH_VARS['user']}")"
 FISH="$(isanitize "${PATH_VARS['fish']}")"
+if [[ -z "$PROFILE" ]]; then
+  return $(status_code 404)
+fi
 
 declare -A USERNAME_CACHE
 load_user_cache
