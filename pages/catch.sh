@@ -19,6 +19,34 @@ elif [[ "$STATUS" != "ONLINE" ]]; then
   return $(status_code 200)
 fi
 
+rarity_table() {
+  for file in "$FISH_ROOT"/fish-by-rarity2/*; do
+    filename=${file##*/}
+    cut "$file" -d' ' -f1 | awk '{ print "r["$1"]=\"'$filename'\";" }'
+  done
+}
+
+ATTR='width=180 height=180'
+RARITY_TABLE="$(rarity_table)"
+
+fish_images() {
+  awk -F, '
+BEGIN {
+'"$RARITY_TABLE"'
+}
+  {
+    print "<div class=fishbig>";
+    if ( $1 >= 5000 ) {
+      print "<img src=\"https://stream.cgs.dev/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />"
+    } else {
+      print "<img src=\"https://stream.cgs.dev/newfish/spr_fish_"$1"_x.png\" loading=lazy '"$ATTR"' class=\""r[$1]" newfish "g"\" />"
+    }
+    print "</div>";
+}'
+}
+
 source fishutils.sh
 
 catch_fish
+echo "$fish_id,$fish" | fish_images
+component /me/rod

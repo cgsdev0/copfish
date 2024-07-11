@@ -1,4 +1,24 @@
 
+function publish() {
+  local TOPIC
+  local line
+  TOPIC="$1"
+  if [[ -z "$TOPIC" ]]; then
+    return
+  fi
+  if [[ ! -d "pubsub/${TOPIC}" ]]; then
+    return
+  fi
+  TEE_ARGS=$(find pubsub/"${TOPIC}" -type p)
+  if [[ -z "$TEE_ARGS" ]]; then
+    return
+  fi
+  tee $TEE_ARGS > /dev/null
+}
+
+event() {
+  printf "event: %s\ndata: %s\n\n" "$@"
+}
 start_message_broker() {
   rm -f /tmp/tau_tunnel;
   mkfifo /tmp/tau_tunnel;
@@ -67,6 +87,7 @@ start_tau_websocket() {
           # Append
           echo "$rod_type $quantity" >> "$rod_file"
       fi
+      event 'rod' | publish stream
   }
 
   reqreader() {

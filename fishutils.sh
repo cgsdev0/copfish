@@ -72,16 +72,6 @@ function roll() {
   echo $ACC
 }
 
-ITERATIONS=1
-if [[ "$1" =~ -([0-9]+) ]]; then
-  ITERATIONS="${BASH_REMATCH[1]}"
-  shift
-fi
-
-for ((j=0; j<ITERATIONS; j++)); do
-  roll "$@"
-done
-
 fish_leaderboard() {
     cd "$FISH_ROOT/$CHAN"
     find * -maxdepth 0 -type f \
@@ -229,12 +219,14 @@ catch_fish() {
 
     pushd "$FISH_ROOT/$CHAN" &> /dev/null
     now=$(date +%s)
-    if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown" ]]; then
-        cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown")
-        if [[ $cooldown -gt $now ]]; then
-            echo "you are on cooldown for $((cooldown-now)) seconds"
-            return
-        fi
+    if [[ "$USER_NAME" != "badcop_" ]]; then
+      if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown" ]]; then
+          cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown")
+          if [[ $cooldown -gt $now ]]; then
+              echo "you are on cooldown for $((cooldown-now)) seconds"
+              return
+          fi
+      fi
     fi
     fishing_rod="$(use_rod)"
     if [[ ! -f "$FISH_ROOT/fishing-rods/${fishing_rod}" ]]; then
@@ -277,15 +269,15 @@ catch_fish() {
 
     if [[ $count -eq 0 ]]; then
         description="THE FIRST"
-        echo "@$USER_NAME caught and DISCOVERED $description $fish ($class_pretty)! ( never caught before :O ) ($fishing_rod rod used)"
+        echo "You caught and DISCOVERED $description $fish ($class_pretty)! ( never caught before :O ) ($fishing_rod rod used)"
     else
-        echo "@$USER_NAME caught $description $fish ($class_pretty)! ($rarity% rarity) ($fishing_rod rod used)"
+        echo "You caught $description $fish ($class_pretty)! ($rarity% rarity) ($fishing_rod rod used)"
     fi
     FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","twitch_id":'$USER_ID',"id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
     popd &> /dev/null
     tbus_send "fish-catch" "$FISH_JSON"
     if [[ "$(fishdex check)" != "$PRECHECK" ]]; then
-      send_twitch_msg "@$USER_NAME HAS COMPLETED THEIR FISHDEX!!!!!!!!"
+      send_twitch_msg "YOU HAVE COMPLETED THEIR FISHDEX!!!!!!!!"
     fi
 }
 
@@ -317,7 +309,7 @@ fishdex() {
     touch "$FISH_ROOT/${CHAN}/$USER_ID"
     count=$(cut -d',' -f2 "$FISH_ROOT/${CHAN}/$USER_ID" | sort -nu | wc -l)
     if [[ -z "$1" ]]; then
-      echo "@$USER_NAME has caught $count out of $total possible fish!"
+      echo "You have caught $count out of $total possible fish!"
     else
       echo "$total > $count" | bc
     fi
