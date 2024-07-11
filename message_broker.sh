@@ -57,7 +57,7 @@ start_tau_websocket() {
   give_rod() {
       rod_type="$1"
       quantity="$2"
-      rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_NAME"
+      rod_file="$FISH_ROOT/$CHAN/fishing-rods/$USER_ID"
       touch "$rod_file"
       if grep -q "$rod_type" "$rod_file"; then
           current_quantity=$(grep "$rod_type" "$rod_file" | cut -d' ' -f2)
@@ -83,23 +83,23 @@ start_tau_websocket() {
                   echo "ONLINE" > "$FISH_ROOT/status"
                   ;;
               "channel-channel_points_custom_reward_redemption-add")
-                  who=$(echo "$line" | jq -r '.event_data.user_name');
+                  who=$(echo "$line" | jq -r '.event_data.user_id');
                   reward=$(echo "$line" | jq -r '.event_data.reward.title');
                   case $reward in
                       "Good Rod")
-                          USER_NAME=$who
+                          USER_ID=$who
                           give_rod good 30 1>&2
                           ;;
                       "Admin Rod")
-                          USER_NAME=$who
+                          USER_ID=$who
                           give_rod admin 1 1>&2
                           ;;
                       "Super Rod")
-                          USER_NAME=$who
+                          USER_ID=$who
                           give_rod super 30 1>&2
                           ;;
                       "NULL Rod")
-                          USER_NAME=$who
+                          USER_ID=$who
                           give_rod null 1 1>&2
                           ;;
                   esac
