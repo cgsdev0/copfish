@@ -72,7 +72,7 @@ fishdex() {
 }
 
 uncaught_fish() {
-    diff <(cut -d',' -f1-2 "$PROFILE" | sort -nu) <(cat "$FISH_ROOT"/fish-by-rarity2/* | sed 's/ /,/' | sort -nu) | grep '>' | sed 's/^> //;s/$/,0/' | fish_images
+    diff <(cut -d',' -f2-3 "$PROFILE" | sort -nu) <(cat "$FISH_ROOT"/fish-by-rarity2/* | sed 's/ /,/' | sort -nu) | grep '>' | sed 's/^> //;s/$/,0/' | fish_images
 }
 famous=$(jq -r '.twitchID' "$FISH_ROOT/badcop_/hall-of-fame/json" | grep "^$PROFILE$" | wc -l)
 
