@@ -56,7 +56,7 @@ hall_of_fame() {
     | head -n9 \
     | fish_images)"
   echo "<div class='stand'>"
-  echo "$ROWS" | sed -n '2p;1p;3p'
+  echo "$ROWS" | sed -n '1h; 2{p; g; p}; 3p;'
   echo "</div><div class='runnerups'>"
   echo "$ROWS" | tail -n6
   echo "</div>"
