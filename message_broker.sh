@@ -58,6 +58,7 @@ start_message_broker() {
   }
 
   set -o pipefail;
+  echo "starting broker socket"
   while true; do
     { authenticate; reqreader < /tmp/tau_tunnel; } \
         | websocat -E 'wss://tau.cgs.dev/ws/message-broker/' --ping-interval 10 --ping-timeout 15 \
@@ -137,14 +138,11 @@ start_tau_websocket() {
 
   set -o pipefail;
   while true; do
+    echo "starting tau socket"
     authenticate \
         | websocat -E wss://tau.cgs.dev/ws/twitch-events/ --ping-interval 10 --ping-timeout 15 \
         | reqreader
     FAILED=$?
     echo "TAU SOCKET FAILED: $FAILED"
-    if [[ "$FAILED" -ge 130 ]]; then
-      exit 0
-    fi
-    echo "IT CRASHED, RESTARTING"
   done
 }
