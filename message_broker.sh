@@ -73,6 +73,8 @@ start_message_broker() {
 }
 
 start_tau_websocket() {
+  rm -f /tmp/tau_tunnel2;
+  mkfifo /tmp/tau_tunnel2;
   CHAN="badcop_"
 
   give_rod() {
@@ -133,15 +135,14 @@ start_tau_websocket() {
 
   authenticate() {
       echo '{"token":"'${TAU_TOKEN}'"}'
-      cat
   }
 
   set -o pipefail;
   while true; do
     echo "starting tau socket"
-    authenticate \
+    { authenticate; reqreader < /tmp/tau_tunnel2; } \
         | websocat -E wss://tau.cgs.dev/ws/twitch-events/ --ping-interval 10 --ping-timeout 15 \
-        | reqreader
+        > /tmp/tau_tunnel2
     FAILED=$?
     echo "TAU SOCKET FAILED: $FAILED"
   done
