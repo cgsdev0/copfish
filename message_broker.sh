@@ -133,7 +133,7 @@ start_tau_websocket() {
 
   authenticate() {
       echo '{"token":"'${TAU_TOKEN}'"}'
-      sleep infinity
+      cat
   }
 
   set -o pipefail;
