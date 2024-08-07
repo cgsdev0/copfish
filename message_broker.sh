@@ -63,7 +63,7 @@ start_message_broker() {
         | websocat -E 'wss://tau.cgs.dev/ws/message-broker/' --ping-interval 10 --ping-timeout 15 \
         >/tmp/tau_tunnel;
     FAILED=$?
-    echo "$FAILED"
+    echo "TAU MESSAGE BROKER FAILED: $FAILED"
     if [[ "$FAILED" -ge 130 ]]; then
       exit 0
     fi
@@ -141,7 +141,7 @@ start_tau_websocket() {
         | websocat -E wss://tau.cgs.dev/ws/twitch-events/ --ping-interval 10 --ping-timeout 15 \
         | reqreader
     FAILED=$?
-    echo "$FAILED"
+    echo "TAU SOCKET FAILED: $FAILED"
     if [[ "$FAILED" -ge 130 ]]; then
       exit 0
     fi
