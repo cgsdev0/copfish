@@ -2,6 +2,37 @@ CHAN=badcop_
 
 
 tbus_send() {
+
+    rarity_table() {
+      for file in "$FISH_ROOT"/fish-by-rarity2/*; do
+        filename=${file##*/}
+        cut "$file" -d' ' -f1 | awk '{ print "r["$1"]=\"'$filename'\";" }'
+      done
+    }
+
+    RARITY_TABLE="$(rarity_table)"
+
+    the_other_fish_images() {
+      while IFS= read -r line; do
+        [[ -z "$line" ]] && break
+        E="${line##*,}"
+        printf "$line, ${USERNAME_CACHE[$E]}\n"
+      done | awk -F, '
+    BEGIN {
+    '"$RARITY_TABLE"'
+    }
+      {
+        printf "%s","<div class=\"flex items-end\">";
+        printf "%s","<div class=\"text-center\">";
+        printf "%s","<div class=\"caughtBy hidden\"><a href=\"/profile/"$4"\">"$5"</a></div>";
+        if ( $2 >= 5000 ) {
+          printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$4"/"$3"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"cursor-pointer size-[96px] shrink-0 "g" "r[$2]"\" />"
+        } else {
+          printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$4"/"$3"\" src=\"https://stream.cgs.dev/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"cursor-pointer sprite size-[96px] shrink-0 "r[$2]" newfish "g"\" />"
+        }
+        print "</div></div>";
+    }'
+    }
     function publish() {
       local TOPIC
       local line
@@ -23,7 +54,9 @@ tbus_send() {
       printf "event: %s\ndata: %s\n\n" "$@"
     }
 
-    event "fish" '{"message_type":"'"$1"'","source":"bash","data":'"${2:-\{\}}"'}' | publish stream
+    fish="$(jq -r '[.fish, .id, .float, .twitch_id, .caught_by] | @csv' <<< "${2:-\{\}}")"
+    stuff="$(the_other_fish_images <<< "${fish//$'"'/}")"
+    event "fish" "${stuff//$'\n'/}" | publish stream
     echo 'SYSTEM_EV {"message_type":"'"$1"'","source":"bash","data":'"${2:-\{\}}"'}' > /tmp/tau_tunnel
 
 }
@@ -258,7 +291,7 @@ catch_fish() {
     touch "$FISH_ROOT/${CHAN}/$USER_ID"
     personalcount=$(cut -d',' -f2 "$FISH_ROOT/${CHAN}/$USER_ID" | grep "$fish_id" | wc -l)
     if [[ $personalcount -eq 0 ]]; then
-        description="their first"
+        description="your first"
     fi
 
     rarity=$(bc <<< "scale=2; 100 - ( $count / $most_count * 100 )")

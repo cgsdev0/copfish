@@ -13,12 +13,12 @@ table_row() {
   local COUNT ID
   while IFS= read -r line; do
     read ID COUNT <<< "$line"
-    echo "<tr><td><a href=\"profile/$ID\">${USERNAME_CACHE[$ID]:-twitch_user:$ID}</a></td><td>$COUNT</td></tr>"
+    echo "<tr><td><a href=\"profile/$ID\">${USERNAME_CACHE[$ID]:-twitch_user:$ID}</a></td><td class=text-right>$COUNT</td></tr>"
   done
 }
 
 htmx_page <<-EOF
-<table>
+<table class="w-full max-w-72">
 $(find . -maxdepth 1 -type f \
   | tr -d './' \
   | xargs -I {} bash -c "echo -n {}' '; cut -d',' -f2 {} | sort -u | wc -l" \

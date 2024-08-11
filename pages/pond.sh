@@ -12,7 +12,7 @@ fi
 USER_ID="${SESSION[id]}"
 
 if [[ -z "$USER_ID" ]]; then
-  header Location /connect
+  header Location "https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&response_type=code&scope=&redirect_uri=${PROTOCOL}${HOST}/oauth"
   end_headers
   end_headers
 

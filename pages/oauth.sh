@@ -74,7 +74,7 @@ SESSION[username]="$USER_NAME"
 
 save_session
 
-header Location /pond
+header Location "/pond?popout=true"
 end_headers
 end_headers
 

@@ -30,7 +30,7 @@ BEGIN {
 }
   {
     if ( $3 == "" ) {
-      printf "<div hx-target=\"#showcase\" hx-swap=\"outerHTML\" hx-get=\"/fish/"'$PROFILE'"/"$4"\" class=\"clickable fish\">";
+      printf "<div hx-target=\"#showcase\" hx-swap=\"outerHTML\" hx-get=\"/fish/"'$PROFILE'"/"$4"\" class=\"cursor-pointer fish\">";
     } else {
       print "<div class=fish>";
     }
@@ -47,7 +47,7 @@ BEGIN {
   if ( $1 >= 5000 ) {
     print "<img src=\"https://stream.cgs.dev/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />"
   } else {
-  print "<img src=\"https://stream.cgs.dev/newfish/spr_fish_"$1"_x.png\" loading=lazy '"$ATTR"' class=\""r[$1]" newfish "g"\" />"
+  print "<img src=\"https://stream.cgs.dev/newfish/spr_fish_"$1"_x.png\" loading=lazy '"$ATTR"' class=\"sprite "r[$1]" newfish "g"\" />"
 }
     print "</div>";
 }'
@@ -83,10 +83,10 @@ EOF
   return
 fi
 htmx_page <<-EOF
-<div class="container">
+<div class="container mb-12">
 <content>
 <a href="/">&larr; Back to Home</a>
-<h1>${USERNAME_CACHE[$PROFILE]}'s Profile</h1>
+<h1 class="text-xl font-medium">${USERNAME_CACHE[$PROFILE]}'s Profile</h1>
 <p>Hall of Famers: $famous</p>
 <h2>Fishdex</h2>
 <p>Species Caught: $count / $total</p>
@@ -97,7 +97,9 @@ $(uncaught_fish)
 <h2>Fresh Catches</h2>
 <div class="fishtank">
 $(fresh_catches)
-<button hx-target="closest div" hx-get="/profile/$PROFILE?load=rest">Load All Fish</button>
+<br>
+<button
+hx-target="closest div" hx-get="/profile/$PROFILE?load=rest">Load All Fish</button>
 </div>
 </content>
 <aside id="showcase"></aside>

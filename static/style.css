@@ -1,66 +1,64 @@
-:root {
-  color-scheme: light dark;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  button {
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-lg;
+  }
+
+  input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out bg-white dark:bg-slate-700;
+  }
 }
 
-html,
-body {
-  padding: 0;
-  margin: 0;
+@layer utilities {
+  .sprite {
+    image-rendering: pixelated;
+  }
+  .uncaught {
+    filter: brightness(0);
+    opacity: 50%;
+  }
+  .fish {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
+
+    img {
+      height: 64px;
+    }
+  }
 }
 
-#signature {
-  position: absolute;
-  z-index: 100;
-  right: 20px;
-  top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+div.stand .famer:nth-child(1) .bar {
+  height: 120px;
+  background-color: silver;
+}
+div.stand .famer:nth-child(2) .bar {
+  height: 180px;
+  background-color: gold;
+}
+div.stand .famer:nth-child(3) .bar {
+  height: 60px;
+  background-color: brown;
 }
 
-#signature a {
-  text-decoration: none;
+.card {
+  @apply border rounded-xl p-4 flex;
 }
 
-#signature a:hover {
-  text-decoration: underline;
+a {
+  @apply text-sky-500 hover:underline;
 }
 
-#signature svg {
-  width: 36px;
-  height: 36px;
-  margin-top: -4px;
-  vertical-align: middle;
+h1 {
+  @apply text-xl font-medium;
 }
 
-#form {
-  display: flex;
-  max-width: 400px;
-  flex-direction: column;
-}
-
-#count {
-  font-size: 24px;
-}
-
-img.newfish {
-  image-rendering: pixelated;
-}
-
-img.uncaught {
-  filter: brightness(0);
-  opacity: 50%;
-}
-
-div.fish {
-  display: inline-block;
-  position: relative;
-  width: 64px;
-  height: 64px;
-}
-
-.clickable {
-  cursor: pointer;
+h2 {
+  @apply text-lg font-medium;
 }
 
 div.fish > .name {
@@ -82,6 +80,10 @@ div.fish > .name {
   display: none;
 }
 
+div.fish:hover > .name {
+  display: inline-block;
+}
+
 div.fish > .count {
   position: absolute;
   color: white;
@@ -98,103 +100,6 @@ div.fish > .count {
   display: none;
 }
 
-div.fish:hover > .name {
-  display: inline-block;
-}
-
 div.fish:hover > .count {
   display: inline-block;
-}
-
-div.container2 {
-  display: flex;
-  flex-direction: column;
-}
-
-div.container {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-content {
-  margin-bottom: 80px;
-  margin-left: 20px;
-  margin-top: 20px;
-  max-width: 900px;
-}
-
-aside#showcase {
-  box-sizing: border-box;
-  background-color: #ccc;
-  transition:
-    min-width 0.4s,
-    max-width 0.4s;
-  min-width: 0px;
-  max-width: 0px;
-  position: -webkit-sticky;
-  position: sticky;
-  height: 100vh;
-  padding: 8px;
-  top: 0;
-  right: 0;
-  overflow: hidden;
-  z-index: 200;
-}
-
-aside#showcase.expanded {
-  min-width: 300px;
-  max-width: 300px;
-}
-
-div.halloffame {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: center;
-}
-div.halloff12ame .stand {
-  display: flex;
-  flex-direction: row;
-}
-div.halloffame .stand .famer:nth-child(1) .bar {
-  height: 120px;
-  background-color: silver;
-}
-div.halloffame .stand .famer:nth-child(2) .bar {
-  height: 180px;
-  background-color: gold;
-}
-div.halloffame .stand .famer:nth-child(3) .bar {
-  height: 60px;
-  background-color: brown;
-}
-
-div.stand {
-  display: flex;
-  margin-bottom: 24px;
-}
-div.famer {
-  display: flex;
-  align-items: flex-end;
-}
-
-div.halloffame .runnerups {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.famer-inner {
-  width: 128px;
-}
-
-.famer-inner .caughtBy {
-  z-index: 90;
-  text-align: center;
-}
-
-.famer-inner .streak {
-  text-align: center;
 }
