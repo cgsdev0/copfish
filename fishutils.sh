@@ -22,13 +22,13 @@ tbus_send() {
     '"$RARITY_TABLE"'
     }
       {
-        printf "%s","<div class=\"flex items-end\">";
+        printf "%s","<div class=\"flex shrink-0 items-end\">";
         printf "%s","<div class=\"text-center\">";
         printf "%s","<div class=\"caughtBy hidden\"><a href=\"/profile/"$4"\">"$5"</a></div>";
         if ( $2 >= 5000 ) {
-          printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$4"/"$3"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"cursor-pointer size-[96px] shrink-0 "g" "r[$2]"\" />"
+          printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$4"/"$3"\" src=\"https://stream.cgs.dev/fish/"tolower($1)".png\" loading=lazy '"$ATTR"' class=\"cursor-pointer size-[96px] "g" "r[$2]"\" />"
         } else {
-          printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$4"/"$3"\" src=\"https://stream.cgs.dev/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"cursor-pointer sprite size-[96px] shrink-0 "r[$2]" newfish "g"\" />"
+          printf "%s","<img hx-swap=\"outerHTML\" hx-target=\"#showcase\" hx-get=\"/fish/"$4"/"$3"\" src=\"https://stream.cgs.dev/newfish/spr_fish_"$2"_x.png\" loading=lazy '"$ATTR"' class=\"cursor-pointer sprite size-[96px] "r[$2]" newfish "g"\" />"
         }
         print "</div></div>";
     }'
