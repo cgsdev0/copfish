@@ -4,3 +4,4 @@ uploads/
 sessions/
 
 secrets.sh
+static/tailwind.css
