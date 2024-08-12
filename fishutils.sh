@@ -244,6 +244,10 @@ roll_stats() {
     local d=$(roll "${stats_speed[$classification]}")
     echo '{"hp":'$a',"baseDmg":'$b',"varDmg":'$c',"speed":'$d'}' 1>&2
     stats_raw="$a,$b,$c,$d"
+    HP="$a"
+    BASE_DMG="$b"
+    VAR_DMG="$c"
+    SPEED="$d"
     stats_json='{"hp":'$a',"baseDmg":'$b',"varDmg":'$c',"speed":'$d'}'
 }
 
@@ -252,7 +256,7 @@ catch_fish() {
 
     pushd "$FISH_ROOT/$CHAN" &> /dev/null
     now=$(date +%s)
-    if [[ "$USER_NAME" != "badcop_" ]]; then
+    if [[ "$USER_NAME" != "goodcop_" ]]; then
       if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown" ]]; then
           cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown")
           if [[ $cooldown -gt $now ]]; then
@@ -300,12 +304,24 @@ catch_fish() {
     echo "$timestamp,$fish_id,$fish,$fish_float,$stats_raw" >> "$FISH_ROOT/${CHAN}/$USER_ID"
     echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown"
 
+    echo "<pre>"
     if [[ $count -eq 0 ]]; then
         description="THE FIRST"
-        echo "You caught and DISCOVERED $description $fish ($class_pretty)! ( never caught before :O ) ($fishing_rod rod used)"
+        echo -n "You DISCOVERED "
     else
-        echo "You caught $description $fish ($class_pretty)! ($rarity% rarity) ($fishing_rod rod used)"
+        echo -n "You caught "
     fi
+    echo "$description $fish!"
+    echo "Classification: $class_pretty"
+    if [[ $count -eq 0 ]]; then
+      echo "Rarity: INFINITE"
+    else
+      echo "Rarity: $rarity%"
+    fi
+    echo "Rod: $fishing_rod rod"
+    echo "HP: $HP"
+    echo "Damage Range: $((BASE_DMG+1)) - $((BASE_DMG+VAR_DMG))"
+    echo "</pre>"
     FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","twitch_id":'$USER_ID',"id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
     popd &> /dev/null
     tbus_send "fish-catch" "$FISH_JSON"

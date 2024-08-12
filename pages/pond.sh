@@ -40,7 +40,7 @@ $(component /me/rod)
 </div>
 </div>
 <div id="result"></div>
-<div class="w-full">
+<div class="w-full flex flex-col sm:flex-row gap-4 mt-4">
 <button hx-post="/catch" hx-target="#result" class="w-full">Fish</button>
 $(popout_button)
 </div>
