@@ -256,11 +256,12 @@ catch_fish() {
 
     pushd "$FISH_ROOT/$CHAN" &> /dev/null
     now=$(date +%s)
-    if [[ "$USER_NAME" != "goodcop_" ]]; then
+    if [[ "$USER_NAME" != "badcop_" ]]; then
       if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown" ]]; then
           cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown")
           if [[ $cooldown -gt $now ]]; then
               echo "you are on cooldown for $((cooldown-now)) seconds"
+              COOLDOWN=true
               return
           fi
       fi
@@ -322,6 +323,20 @@ catch_fish() {
     echo "HP: $HP"
     echo "Damage Range: $((BASE_DMG+1)) - $((BASE_DMG+VAR_DMG))"
     echo "</pre>"
+    echo '<button hx-swap-oob="true" id="fish-button" hx-post="/catch" hx-target="#result" disabled class="w-full"
+  _="on load
+  set x to 120 then
+  repeat forever
+  js(x) return `${Math.floor(x / 60)}:${Math.floor(x % 60).toString().padStart(2, '"'"'0'"'"')}` end then
+    put it into me
+    if x is less than 0 then
+      remove @disabled from me
+      put `Fish` into me
+      break
+    end
+    wait 1s
+    decrement x
+  end">2:00</button>'
     FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","twitch_id":'$USER_ID',"id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
     popd &> /dev/null
     tbus_send "fish-catch" "$FISH_JSON"

@@ -60,7 +60,10 @@ BEGIN {
 
 source fishutils.sh
 
-# TODO: dont render the image if its cooldown
 catch_fish
-echo "$fish_id,$fish" | fish_images
-component /me/rod
+if [[ -z "$COOLDOWN" ]]; then
+cat <<-EOF
+$(echo "$fish_id,$fish" | fish_images)
+$(component /me/rod)
+EOF
+fi
