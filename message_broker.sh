@@ -1,3 +1,4 @@
+source ./fishutils.sh
 
 function publish() {
   local TOPIC
@@ -105,6 +106,9 @@ start_tau_websocket() {
                   ;;
               "stream-online")
                   echo "ONLINE" > "$FISH_ROOT/status"
+                  LICENSE="$(gen_license)"
+                  echo "${LICENSE,,}" > "$FISH_ROOT/license"
+                  tbus_send "new-license" "{\"license\": \"$LICENSE\"}"
                   ;;
               "channel-channel_points_custom_reward_redemption-add")
                   who=$(echo "$line" | jq -r '.event_data.user_id');

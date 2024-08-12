@@ -1,4 +1,4 @@
-if [[ "$REQUEST_METHOD" != "POST" ]]; then
+if [[ "$REQUEST_METHOD" != "POST" && -z "$INTERNAL_REQUEST" ]]; then
   # only allow POST to this endpoint
   return $(status_code 405)
 fi
@@ -19,6 +19,19 @@ elif [[ "$STATUS" != "ONLINE" ]]; then
   return $(status_code 200)
 fi
 
+LICENSE="$(cat "$FISH_ROOT/license")"
+USER_LICENSE="${SESSION[license]}"
+if [[ "$LICENSE" != "$USER_LICENSE" ]]; then
+cat <<EOF
+your fishing license is expired
+<form class="flex gap-1">
+<input name="license" type="text" placeholder="Enter new license">
+<button hx-post="/license" hx-target="#result">Submit</button>
+</form>
+EOF
+  return $(status_code 200)
+fi
+
 rarity_table() {
   for file in "$FISH_ROOT"/fish-by-rarity2/*; do
     filename=${file##*/}
@@ -35,7 +48,7 @@ BEGIN {
 '"$RARITY_TABLE"'
 }
   {
-    print "<div class=fishbig>";
+    print "<div class=\"fishbig flex justify-center\">";
     if ( $1 >= 5000 ) {
       print "<img src=\"https://stream.cgs.dev/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />"
     } else {

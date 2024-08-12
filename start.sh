@@ -25,6 +25,16 @@ mkdir -p pubsub
 mkdir -p data
 mkdir -p uploads
 
+touch "$FISH_ROOT/license"
+
+if [[ -z "$(cat "$FISH_ROOT/license")" ]]; then
+  source ./fishutils.sh
+  LICENSE="$(gen_license)"
+  echo "${LICENSE,,}" > "$FISH_ROOT/license"
+  tbus_send "new-license" "{\"license\": \"$LICENSE\"}"
+fi
+
+
 PORT=${PORT:-3000}
 
 TCP_PROVIDER=${TCP_PROVIDER:-tcpserver}

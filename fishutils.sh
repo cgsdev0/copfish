@@ -63,7 +63,7 @@ tbus_send() {
 
 send_twitch_msg() {
     # TODO
-    echo "$@"
+    :
 }
 
 function _roll_n() {

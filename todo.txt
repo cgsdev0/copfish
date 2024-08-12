@@ -1,4 +1,6 @@
-- [ ] live updating feed of fish being caught
+- [x] queue system for tmux popups
+- [x] add the mascot as a cow
+- [x] live updating feed of fish being caught
 - [ ] make the site look more good
 - [ ] add more features to the dashboard
 - [ ] pixel art for fishes

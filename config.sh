@@ -41,5 +41,17 @@ isanitize() {
   printf '%s' "$_"
 }
 
+gen_license() {
+  local chars="ABCDEFGHJKLMNPQRSTUVWXYZ234679"
+  local code=""
+
+  for i in {1..4}; do
+      code="$code${chars:RANDOM%${#chars}:1}"
+  done
+
+  echo "$code"
+}
+
+export -f gen_license
 export -f sanitize
 export -f isanitize

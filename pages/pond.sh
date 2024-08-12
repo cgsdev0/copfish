@@ -25,18 +25,26 @@ popout_button() {
   if [[ "${QUERY_PARAMS['popout']}" == "true" ]]; then
     return
   fi
-  echo "<button onclick=\"window.open('/pond?popout=true', 'cop.fish', 'width=340,height=600');\">Pop-out</button>"
+  echo "<button class='w-full' onclick=\"window.open('/pond?popout=true', 'cop.fish', 'width=340,height=600');\">Pop-out</button>"
 }
 
 htmx_page <<-EOF
 <div hx-ext="sse" sse-connect="/stream">
-<h1>$PROJECT_NAME</h1>
-<p>Logged in as <a href="/profile/${SESSION[id]}" target="_blank">${SESSION[username]}</a></p>
+<div class="container flex flex-col min-h-dvh justify-between p-4">
+<div>
+<div class="text-right">Logged in as <a href="/profile/${SESSION[id]}" target="_blank">${SESSION[username]}</a></div>
+<div class="text-right">(<a href="/logout">Logout</a>)</div>
+<div class="mt-4">
 <h2>Fishing Rods</h2>
 $(component /me/rod)
+</div>
+</div>
 <div id="result"></div>
-<button hx-post="/catch" hx-target="#result">Fish</button>
+<div class="w-full">
+<button hx-post="/catch" hx-target="#result" class="w-full">Fish</button>
 $(popout_button)
+</div>
+</div>
 </div>
 EOF
 return $(status_code 200)
