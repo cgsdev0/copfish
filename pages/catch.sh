@@ -23,7 +23,7 @@ LICENSE="$(cat "$FISH_ROOT/license")"
 USER_LICENSE="${SESSION[license]}"
 if [[ "$LICENSE" != "$USER_LICENSE" ]]; then
 cat <<EOF
-your fishing license is expired
+Your fishing license is expired! You can find a new one on the screen on stream
 <form class="flex gap-1">
 <input name="license" type="text" placeholder="Enter new license">
 <button hx-post="/license" hx-target="#result">Submit</button>
