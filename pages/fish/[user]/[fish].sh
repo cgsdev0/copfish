@@ -48,8 +48,8 @@ RARITY="$(echo "$RARITY_TABLE" \
 RARITY="${RARITY//_/ }"
 
 htmx_page <<-EOF
-<aside id="showcase" class="expanded">
-<button onclick="showcase.classList.remove('expanded'); showcase.innerHTML='';">X</button>
+<div id="modal" class="p-4 round-xl" hx-swap-oob="true" _="init showModal() the #dialog end">
+<button _="on click close() the #dialog">X</button>
 <h1>${USERNAME_CACHE[$PROFILE]}'s Fish</h1>
 $(echo "${FISH_DATA[1]},${FISH_DATA[2]}" | fish_images)
 <pre>
@@ -63,5 +63,5 @@ VAR_DMG:  ${FISH_DATA[6]}
 SPEED:    ${FISH_DATA[7]}
 WINS:     ${FISH_DATA[8]:-UNKNOWN}
 </pre>
-</aside>
+</div>
 EOF

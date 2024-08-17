@@ -146,6 +146,10 @@ function htmx_page() {
   <script src="https://unpkg.com/htmx.org@1.9.10/dist/ext/sse.js"></script>
   </head>
   <body class="dark:bg-slate-800 dark:text-white">
+  <dialog id="dialog" class="dark:bg-slate-700 rounded-xl dark:text-white dialog">
+  <div id="modal">
+  </div>
+</dialog>
   $(_inject_hmr)
 EOF
 

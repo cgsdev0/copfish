@@ -30,7 +30,7 @@ BEGIN {
 }
   {
     if ( $3 == "" ) {
-      printf "<div hx-target=\"#showcase\" hx-swap=\"outerHTML\" hx-get=\"/fish/"'$PROFILE'"/"$4"\" class=\"cursor-pointer fish\">";
+      printf "<div hx-swap=\"none\" hx-get=\"/fish/"'$PROFILE'"/"$4"\" class=\"cursor-pointer fish\">";
     } else {
       print "<div class=fish>";
     }

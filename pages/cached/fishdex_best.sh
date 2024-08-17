@@ -18,7 +18,7 @@ table_row() {
 }
 
 htmx_page <<-EOF
-<table class="w-full max-w-72">
+<table class="w-full">
 $(find . -maxdepth 1 -type f \
   | tr -d './' \
   | xargs -I {} bash -c "echo -n {}' '; cut -d',' -f2 {} | sort -u | wc -l" \

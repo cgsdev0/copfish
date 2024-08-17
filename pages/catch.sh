@@ -50,7 +50,7 @@ BEGIN {
   {
     print "<div class=\"fishbig flex justify-center\">";
     if ( $1 >= 5000 ) {
-      print "<img src=\"https://stream.cgs.dev/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />"
+      printf "%s", "<img src=\"https://stream.cgs.dev/fish/"tolower($2)".png\" loading=lazy '"$ATTR"' class=\""g" "r[$1]"\" />"
     } else {
       print "<img src=\"https://stream.cgs.dev/newfish/spr_fish_"$1"_x.png\" loading=lazy '"$ATTR"' class=\"sprite "r[$1]" newfish "g"\" />"
     }
@@ -62,6 +62,7 @@ source fishutils.sh
 
 catch_fish
 if [[ -z "$COOLDOWN" ]]; then
+debug "FISH='$fish'"
 cat <<-EOF
 $(echo "$fish_id,$fish" | fish_images)
 $(component /me/rod)

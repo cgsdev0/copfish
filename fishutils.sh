@@ -54,8 +54,8 @@ tbus_send() {
       printf "event: %s\ndata: %s\n\n" "$@"
     }
 
-    fish="$(jq -r '[.fish, .id, .float, .twitch_id, .caught_by] | @csv' <<< "${2:-\{\}}")"
-    stuff="$(the_other_fish_images <<< "${fish//$'"'/}")"
+    local fish="$(jq -r '[.fish, .id, .float, .twitch_id, .caught_by] | @csv' <<< "${2:-\{\}}")"
+    local stuff="$(the_other_fish_images <<< "${fish//$'"'/}")"
     event "fish" "${stuff//$'\n'/}" | publish stream
     echo 'SYSTEM_EV {"message_type":"'"$1"'","source":"bash","data":'"${2:-\{\}}"'}' > /tmp/tau_tunnel
 

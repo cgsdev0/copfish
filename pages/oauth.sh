@@ -52,6 +52,25 @@ EOF
   return $(status_code 400)
 fi
 
+TWITCH_RESPONSE=$(curl -Ss -X GET 'https://api.twitch.tv/helix/users?id='$USER_ID \
+  -H "Client-Id: ${TWITCH_CLIENT_ID}" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}")
+USER_NAME=$(echo "$TWITCH_RESPONSE" | jq -r '.data[0] | .display_name')
+RESPONSE="<pre>${TWITCH_RESPONSE}</pre>"
+if [[ -z "$USER_NAME" ]] || [[ "$USER_NAME" == "null" ]]; then
+  end_headers
+  htmx_page <<-EOF
+  <div class="container2">
+    <h1>Error</h1>
+    ${RESPONSE}
+    <p>Something went wrong registering for ${PROJECT_NAME}. :(</p>
+    <p><a href="/">Back to Home</a></p>
+  </div>
+EOF
+  return $(status_code 400)
+fi
+
+
 USER_ACCESS_TOKEN="$ACCESS_TOKEN"
 
 # now we need to get a DIFFERENT token, unrelated, but actually kinda related lol
