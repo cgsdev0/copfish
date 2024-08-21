@@ -63,15 +63,36 @@
 
 div.stand .famer:nth-child(1) .bar {
   height: 120px;
-  background-color: silver;
+  background-image: url("./silver_stand.png");
+  background-size: contain;
+  image-rendering: pixelated;
+  overflow: hidden;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  background-repeat: repeat-y;
+  border-bottom: 4px solid #181818;
 }
 div.stand .famer:nth-child(2) .bar {
   height: 180px;
-  background-color: gold;
+  background-image: url("./gold_stand.png");
+  background-size: contain;
+  image-rendering: pixelated;
+  overflow: hidden;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  background-repeat: repeat-y;
+  border-bottom: 4px solid #181818;
 }
 div.stand .famer:nth-child(3) .bar {
   height: 60px;
-  background-color: brown;
+  background-image: url("./bronze_stand.png");
+  background-size: contain;
+  image-rendering: pixelated;
+  overflow: hidden;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  background-repeat: repeat-y;
+  border-bottom: 4px solid #181818;
 }
 
 .card {
