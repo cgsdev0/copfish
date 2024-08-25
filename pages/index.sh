@@ -86,7 +86,7 @@ search() {
        hx-indicator=".htmx-indicator">
 
     <div id="search-results"
-    class="invisible group-[:focus-within]:visible empty:hidden absolute bg-white dark:bg-slate-800 border flex flex-col p-4 rounded-lg shadow"
+    class="z-20 invisible group-[:focus-within]:visible empty:hidden absolute bg-white dark:bg-slate-800 border flex flex-col p-4 rounded-lg shadow"
     ></div>
     </div>
 EOF
