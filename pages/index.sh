@@ -4,10 +4,22 @@ load_user_cache
 
 table_row() {
   local COUNT ID
+  I=0
+  MAX=0
   while IFS= read -r line; do
     read COUNT ID <<< "$line"
-    echo "<tr><td><a href=\"profile/$ID\">${USERNAME_CACHE[$ID]:-twitch_user:$ID}</a></td><td class=text-right>$COUNT</td></tr>"
+    echo "<style> :root {"
+    echo "--content-width-$ID: calc(90%*($COUNT / var(--max-fish)));"
+    echo "}</style>"
+    echo "<div class='flex justify-between relative mb-1'><div class='pl-2 z-10'><a href=\"profile/$ID\">${USERNAME_CACHE[$ID]:-twitch_user:$ID}</a></div><div class='z-10 pr-2 text-right'>$COUNT</div><div class='absolute h-full bg-blue-100 dark:bg-sky-900 rounded-md origin-left animate-grow left-0 scale-x-0' style='width: var(--content-width-$ID); animation-delay: 0.${I}s;'></div></div>"
+  ((I++))
+  if [[ $COUNT -gt $MAX ]]; then
+    MAX=$COUNT
+  fi
   done
+    echo "<style> :root {"
+    echo "--max-fish: $MAX;"
+    echo "}</style>"
 }
 cd "$FISH_ROOT/badcop_"
 
@@ -95,17 +107,23 @@ htmx_page <<-EOF
   <div class="card flex-col w-full">
 $(search)
   <h2>Most Complete Fishdexes</h2>
-  <div hx-get="/cached/fishdex_best" hx-trigger="load">Loading...</div>
+  <div hx-get="/cached/fishdex_best" hx-trigger="load">
+<div class='mb-1 animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md w-[72%]'>&nbsp;</div>
+<div class='mb-1 animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md w-[60%]'>&nbsp;</div>
+<div class='mb-1 animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md w-[70%]'>&nbsp;</div>
+<div class='mb-1 animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md w-[75%]'>&nbsp;</div>
+<div class='mb-1 animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md w-[67%]'>&nbsp;</div>
+  </div>
   <h2 class="mt-4">Top Fishers</h2>
-  <table class="w-full">
+  <div class="w-full">
 $(find . -maxdepth 1 -type f \
   | tr -d './' \
   | xargs wc -l \
   | sort -nr \
   | tail +2 \
-  | head -n 10 \
+  | head -n 9 \
   | table_row)
-  </table>
+  </div>
   </div>
   </div>
   <div class="card w-full col-span-3 flex-col">
