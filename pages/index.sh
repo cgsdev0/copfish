@@ -110,10 +110,10 @@ $(find . -maxdepth 1 -type f \
   </div>
   <div class="card w-full col-span-3 flex-col">
 <h2>Recent Catches</h2>
-<div hx-ext="sse" sse-connect="/stream" sse-swap="fish" hx-swap="beforeend"
+<div hx-get="/recent" hx-target="#stream" hx-trigger="load"></div>
+<div hx-ext="sse" sse-connect="/stream" id="stream" sse-swap="fish" hx-swap="beforeend"
 class="flex flex-row-reverse overflow-x-hidden justify-end"
 >
-<div class="h-[96px] w-0"></div>
 </div>
 </div>
 </content>

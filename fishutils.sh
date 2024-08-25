@@ -56,6 +56,7 @@ tbus_send() {
 
     local fish="$(jq -r '[.fish, .id, .float, .twitch_id, .caught_by] | @csv' <<< "${2:-\{\}}")"
     local stuff="$(the_other_fish_images <<< "${fish//$'"'/}")"
+    echo "${stuff//$'\n'/}" >> "$FISH_ROOT"/badcop_/recent_catches
     event "fish" "${stuff//$'\n'/}" | publish stream
     echo 'SYSTEM_EV {"message_type":"'"$1"'","source":"bash","data":'"${2:-\{\}}"'}' > /tmp/tau_tunnel
 
