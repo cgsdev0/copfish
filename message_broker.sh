@@ -91,7 +91,7 @@ start_tau_websocket() {
           # Append
           echo "$rod_type $quantity" >> "$rod_file"
       fi
-      event 'rod' | publish stream
+      event 'rod' | publish stream &
   }
 
   reqreader() {
@@ -108,7 +108,7 @@ start_tau_websocket() {
                   echo "ONLINE" > "$FISH_ROOT/status"
                   LICENSE="$(gen_license)"
                   echo "${LICENSE,,}" > "$FISH_ROOT/license"
-                  tbus_send "new-license" "{\"license\": \"$LICENSE\"}"
+                  tbus_send "new-license" "{\"license\": \"$LICENSE\"}" &
                   ;;
               "channel-channel_points_custom_reward_redemption-add")
                   who=$(echo "$line" | jq -r '.event_data.user_id');
