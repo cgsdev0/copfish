@@ -326,17 +326,21 @@ catch_fish() {
     echo "</pre>"
     echo '<button hx-swap-oob="true" id="fish-button" hx-post="/catch" hx-target="#result" disabled class="w-full"
   _="on load
-  set x to 120 then
+  set now to 0
+  set start to 0
+  js return Date.now() + 10 * 1000 end then put it into start
+  js return Date.now() end then put it into now
   repeat forever
-  js(x) return `${Math.floor(x / 60)}:${Math.floor(x % 60).toString().padStart(2, '"'"'0'"'"')}` end then
+  js(now, start) return Math.floor((start - now) / 1000) end then put it into diff
+  js(diff) return `${Math.floor(diff / 60)}:${Math.floor(diff % 60).toString().padStart(2, '"'"'0'"'"')}` end then
     put it into me
-    if x is less than 0 then
+    if diff is less than 0 then
       remove @disabled from me
       put `Fish` into me
       break
     end
     wait 1s
-    decrement x
+    js return Date.now() end then put it into now
   end">2:00</button>'
     FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","twitch_id":'$USER_ID',"id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
     popd &> /dev/null
