@@ -328,7 +328,7 @@ catch_fish() {
   _="on load
   set now to 0
   set start to 0
-  js return Date.now() + 10 * 1000 end then put it into start
+  js return Date.now() + 120 * 1000 end then put it into start
   js return Date.now() end then put it into now
   repeat forever
   js(now, start) return Math.floor((start - now) / 1000) end then put it into diff

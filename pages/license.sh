@@ -22,7 +22,7 @@ fi
 USER_LICENSE="${FORM_DATA[license],,}"
 LICENSE="$(cat "$FISH_ROOT/license")"
 if [[ "$USER_LICENSE" != "$LICENSE" ]]; then
-  echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown"
+  echo $(( now + 10 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown"
   htmx_page <<-EOF
     <p class="text-red-500">Invalid fishing license!</p>
     $(component /catch)
