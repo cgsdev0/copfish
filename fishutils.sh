@@ -58,8 +58,7 @@ tbus_send() {
     local stuff="$(the_other_fish_images <<< "${fish//$'"'/}")"
     echo "${stuff//$'\n'/}" >> "$FISH_ROOT"/badcop_/recent-catches/data
     event "fish" "${stuff//$'\n'/}" | publish stream
-    echo 'SYSTEM_EV {"message_type":"'"$1"'","source":"bash","data":'"${2:-\{\}}"'}' > /tmp/tau_tunnel
-
+    echo 'SYSTEM_EV {"event_type":"'"$1"'","event_source":"cop.fish","event_data":'"${2:-\{\}}"'}' > /tmp/tau_tunnel
 }
 
 send_twitch_msg() {

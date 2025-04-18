@@ -20,62 +20,10 @@ function publish() {
 event() {
   printf "event: %s\ndata: %s\n\n" "$@"
 }
-start_message_broker() {
-  rm -f /tmp/tau_tunnel;
-  mkfifo /tmp/tau_tunnel;
-
-  CHAN=badcop_
-
-  reqreader() {
-    while IFS= read -r line; do
-      if [[ "$line" == "SYSTEM_EV "* ]]; then
-
-        echo "$line" | cut -d' ' -f2- 1>&2
-        echo "$line" | cut -d' ' -f2-
-      else
-        # parse incoming messages
-        MESSAGE_TYPE=$(echo "$line" | jq -r '.message_type')
-        case $MESSAGE_TYPE in
-          "fish-champion")
-            wins="$(echo "$line" | jq -cr '.data.stats.wins')"
-            twitchID="$(echo "$line" | jq -cr '.data.twitchID')"
-            fishfloat="$(echo "$line" | jq -cr '.data.float')"
-            echo "$wins $twitchID $fishfloat" 1>&2
-            if [[ "$wins" -ge 10 ]]; then
-              mkdir -p "$FISH_ROOT/$CHAN/hall-of-fame"
-              echo "$line" | jq -cr '.data' >> "$FISH_ROOT/$CHAN/hall-of-fame/json"
-            fi
-            # update our fish in the database
-            sed -i '/^[^,]\+,[^,]\+,[^,]\+,'$fishfloat',[^,]\+,[^,]\+,[^,]\+,[^,]\+$/s/\(.*\)/\1,'$wins'/' "$FISH_ROOT/$CHAN/$twitchID"
-          ;;
-        esac
-      fi
-    done;
-    exit 0;
-  }
-
-  authenticate() {
-      echo '{"token":"'${TAU_TOKEN}'"}'
-  }
-
-  set -o pipefail;
-  echo "starting broker socket"
-  while true; do
-    { authenticate; reqreader < /tmp/tau_tunnel; } \
-        | websocat -E 'wss://tau.cgs.dev/ws/message-broker/' --ping-interval 10 --ping-timeout 15 \
-        >/tmp/tau_tunnel;
-    FAILED=$?
-    echo "TAU MESSAGE BROKER FAILED: $FAILED"
-    if [[ "$FAILED" -ge 130 ]]; then
-      exit 0
-    fi
-    echo "IT CRASHED, RESTARTING"
-  done
-}
 
 start_tau_websocket() {
-  rm -f /tmp/tau_tunnel2;
-  mkfifo /tmp/tau_tunnel2;
+  rm -f /tmp/tau_tunnel;
+  mkfifo /tmp/tau_tunnel;
   CHAN="badcop_"
 
   give_rod() {
@@ -96,11 +44,27 @@ start_tau_websocket() {
 
   reqreader() {
     while IFS= read -r line; do
+      if [[ "$line" == "SYSTEM_EV "* ]]; then
+        echo "$line" | cut -d' ' -f2- 1>&2
+        echo "$line" | cut -d' ' -f2-
+      else
         # echo "$line" | jq
         eventType=$(echo "$line" | jq -r '."event_type"');
         event_key=$(echo "$line" | jq -r '."event"');
         if [[ "$event_key" != "keep_alive" ]]; then
           case $eventType in
+              "fish-champion")
+                wins="$(echo "$line" | jq -cr '.event_data.stats.wins')"
+                twitchID="$(echo "$line" | jq -cr '.event_data.twitchID')"
+                fishfloat="$(echo "$line" | jq -cr '.event_data.float')"
+                echo "$wins $twitchID $fishfloat" 1>&2
+                if [[ "$wins" -ge 10 ]]; then
+                  mkdir -p "$FISH_ROOT/$CHAN/hall-of-fame"
+                  echo "$line" | jq -cr '.event_data' >> "$FISH_ROOT/$CHAN/hall-of-fame/json"
+                fi
+                # update our fish in the database
+                sed -i '/^[^,]\+,[^,]\+,[^,]\+,'$fishfloat',[^,]\+,[^,]\+,[^,]\+,[^,]\+$/s/\(.*\)/\1,'$wins'/' "$FISH_ROOT/$CHAN/$twitchID"
+              ;;
               "stream-offline")
                   echo "OFFLINE" > "$FISH_ROOT/status"
                   ;;
@@ -134,6 +98,7 @@ start_tau_websocket() {
                   ;;
           esac
         fi
+      fi
     done
   }
 
@@ -144,9 +109,9 @@ start_tau_websocket() {
   set -o pipefail;
   while true; do
     echo "starting tau socket"
-    { authenticate; reqreader < /tmp/tau_tunnel2; } \
+    { authenticate; reqreader < /tmp/tau_tunnel; } \
         | websocat -E wss://tau.cgs.dev/ws/twitch-events/ --ping-interval 10 --ping-timeout 15 \
-        > /tmp/tau_tunnel2
+        > /tmp/tau_tunnel
     FAILED=$?
     echo "TAU SOCKET FAILED: $FAILED"
   done
