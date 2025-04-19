@@ -21,16 +21,16 @@ fi
 
 LICENSE="$(cat "$FISH_ROOT/license")"
 USER_LICENSE="${SESSION[license]}"
-if [[ "$LICENSE" != "$USER_LICENSE" ]]; then
-cat <<EOF
-Your fishing license is expired! You can find a new one on the screen on stream
-<form class="flex gap-1">
-<input name="license" type="text" placeholder="Enter new license">
-<button hx-post="/license" hx-target="#result">Submit</button>
-</form>
-EOF
-  return $(status_code 200)
-fi
+# if [[ "$LICENSE" != "$USER_LICENSE" ]]; then
+# cat <<EOF
+# Your fishing license is expired! You can find a new one on the screen on stream
+# <form class="flex gap-1">
+# <input name="license" type="text" placeholder="Enter new license">
+# <button hx-post="/license" hx-target="#result">Submit</button>
+# </form>
+# EOF
+#   return $(status_code 200)
+# fi
 
 rarity_table() {
   for file in "$FISH_ROOT"/fish-by-rarity2/*; do
