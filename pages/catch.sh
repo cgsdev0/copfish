@@ -62,7 +62,6 @@ source fishutils.sh
 
 catch_fish
 if [[ -z "$COOLDOWN" ]]; then
-debug "FISH='$fish'"
 cat <<-EOF
 $(echo "$fish_id,$fish" | fish_images)
 $(component /me/rod)

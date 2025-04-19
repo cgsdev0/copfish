@@ -242,7 +242,6 @@ roll_stats() {
     local b=$(roll "${stats_base_dmg[$classification]}")
     local c=$(roll "${stats_var_dmg[$classification]}")
     local d=$(roll "${stats_speed[$classification]}")
-    echo '{"hp":'$a',"baseDmg":'$b',"varDmg":'$c',"speed":'$d'}' 1>&2
     stats_raw="$a,$b,$c,$d"
     HP="$a"
     BASE_DMG="$b"
@@ -368,7 +367,7 @@ fishdex_check() {
       echo "No fishdex found!"
     fi
     count=$(cut -d',' -f1 "$FISH_ROOT/${CHAN}/$1" | sort -nu | wc -l)
-    echo "@$1 has caught $count out of $total possible fish!"
+    echo "@$1 has $count out of $total possible fish!"
 }
 
 fishdex() {

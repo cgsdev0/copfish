@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [[ "$$" != "$(pgrep -o -g $$ bash)" ]]; then
+    exec setsid "$0" "$@"
+fi
+
+trap "kill -- -$$" EXIT
+
 cd "${0%/*}"
 
 [[ -f 'config.sh' ]] && source config.sh
@@ -12,7 +18,6 @@ if [[ "${DEV:-true}" == "true" ]] && [[ ! -z "$TAILWIND" ]]; then
 fi
 
 if [[ "${DEV:-true}" != "true" ]]; then
-  start_message_broker &
   start_tau_websocket &
   export ROUTES_CACHE=$(mktemp)
 fi

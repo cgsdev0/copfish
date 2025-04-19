@@ -45,7 +45,6 @@ start_tau_websocket() {
   reqreader() {
     while IFS= read -r line; do
       if [[ "$line" == "SYSTEM_EV "* ]]; then
-        echo "$line" | cut -d' ' -f2- 1>&2
         echo "$line" | cut -d' ' -f2-
       else
         # echo "$line" | jq
@@ -57,7 +56,6 @@ start_tau_websocket() {
                 wins="$(echo "$line" | jq -cr '.event_data.stats.wins')"
                 twitchID="$(echo "$line" | jq -cr '.event_data.twitchID')"
                 fishfloat="$(echo "$line" | jq -cr '.event_data.float')"
-                echo "$wins $twitchID $fishfloat" 1>&2
                 if [[ "$wins" -ge 10 ]]; then
                   mkdir -p "$FISH_ROOT/$CHAN/hall-of-fame"
                   echo "$line" | jq -cr '.event_data' >> "$FISH_ROOT/$CHAN/hall-of-fame/json"
