@@ -4,8 +4,8 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm install --verbose -g tailwindcss
-RUN npx tailwindcss -i /app/static/style.css -o /app/build.css --minify
+RUN npm install --verbose -g tailwindcss@v3
+RUN npx tailwindcss@v3 -i /app/static/style.css -o /app/build.css --minify
 
 FROM ubuntu as prod
 
