@@ -21,7 +21,7 @@ table_row() {
     echo "--max-fish: $MAX;"
     echo "}</style>"
 }
-cd "$FISH_ROOT/badcop_"
+cd "$FISH_ROOT/$CHAN"
 
 ATTR='width=128 height=128'
 

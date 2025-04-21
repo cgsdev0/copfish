@@ -9,7 +9,7 @@ fi
 declare -A USERNAME_CACHE
 load_user_cache
 
-cd "$FISH_ROOT/badcop_"
+cd "$FISH_ROOT/$CHAN"
 FISH_ROW="$(grep -E "^[^,]+,[^,]+,[^,]+,$FISH," "$PROFILE")"
 
 IFS=$'\n' read -d "" -ra FISH_DATA <<< "${FISH_ROW//,/$'\n'}"

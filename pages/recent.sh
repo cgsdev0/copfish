@@ -1,2 +1,2 @@
 
-tail -n 16 "$FISH_ROOT"/badcop_/recent-catches/data
+tail -n 16 "$FISH_ROOT"/$CHAN/recent-catches/data

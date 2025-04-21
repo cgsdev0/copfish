@@ -24,7 +24,6 @@ event() {
 start_tau_websocket() {
   rm -f /tmp/tau_tunnel;
   mkfifo /tmp/tau_tunnel;
-  CHAN="badcop_"
 
   give_rod() {
       rod_type="$1"

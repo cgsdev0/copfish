@@ -153,3 +153,16 @@ div.fish > .count {
 div.fish:hover > .count {
   display: inline-block;
 }
+
+.captcha-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.captcha > div {
+  cursor: pointer;
+  &:hover {
+    background-color: #ffffff40;
+  }
+}

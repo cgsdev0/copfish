@@ -1,5 +1,5 @@
 
-ROD_INFO="$(grep -v ' 0$' "$FISH_ROOT/badcop_/fishing-rods/${SESSION[id]}" \
+ROD_INFO="$(grep -v ' 0$' "$FISH_ROOT/$CHAN/fishing-rods/${SESSION[id]}" \
   | sed 's/ / rod, /;s/$/ uses/')"
 
 htmx_page <<-EOF

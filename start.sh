@@ -9,16 +9,18 @@ trap "kill -- -$$" EXIT
 cd "${0%/*}"
 
 [[ -f 'config.sh' ]] && source config.sh
+regen_captcha
 source message_broker.sh
 
 if [[ "${DEV:-true}" == "true" ]] && [[ ! -z "$TAILWIND" ]]; then
-   npx tailwindcss -i ./static/style.css -o ./static/tailwind.css --watch=always 2>&1 \
+   npx tailwindcss@v3 -i ./static/style.css -o ./static/tailwind.css --watch=always 2>&1 \
      | sed '/^[[:space:]]*$/d;s/^/[tailwind] /' &
    PID=$!
 fi
 
+# move me back
+start_tau_websocket &
 if [[ "${DEV:-true}" != "true" ]]; then
-  start_tau_websocket &
   export ROUTES_CACHE=$(mktemp)
 fi
 

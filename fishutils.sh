@@ -1,4 +1,3 @@
-CHAN=badcop_
 
 
 tbus_send() {
@@ -56,7 +55,7 @@ tbus_send() {
 
     local fish="$(jq -r '[.fish, .id, .float, .twitch_id, .caught_by] | @csv' <<< "${2:-\{\}}")"
     local stuff="$(the_other_fish_images <<< "${fish//$'"'/}")"
-    echo "${stuff//$'\n'/}" >> "$FISH_ROOT"/badcop_/recent-catches/data
+    echo "${stuff//$'\n'/}" >> "$FISH_ROOT"/$CHAN/recent-catches/data
     event "fish" "${stuff//$'\n'/}" | publish stream
     echo 'SYSTEM_EV {"event_type":"'"$1"'","event_source":"cop.fish","event_data":'"${2:-\{\}}"'}' > /tmp/tau_tunnel
 }
@@ -255,7 +254,7 @@ catch_fish() {
 
     pushd "$FISH_ROOT/$CHAN" &> /dev/null
     now=$(date +%s)
-    if [[ "$USER_NAME" != "badcop_" ]]; then
+    if [[ "$USER_NAME" != "$CHAN" ]]; then
       if [[ -f "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown" ]]; then
           cooldown=$(cat "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown")
           if [[ $cooldown -gt $now ]]; then
@@ -322,6 +321,16 @@ catch_fish() {
     echo "HP: $HP"
     echo "Damage Range: $((BASE_DMG+1)) - $((BASE_DMG+VAR_DMG))"
     echo "</pre>"
+    cooldown_button
+    FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","twitch_id":'$USER_ID',"id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
+    popd &> /dev/null
+    tbus_send "fish-catch" "$FISH_JSON"
+    if [[ "$(fishdex check)" != "$PRECHECK" ]]; then
+      send_twitch_msg "YOU HAVE COMPLETED THEIR FISHDEX!!!!!!!!"
+    fi
+}
+
+cooldown_button() {
     echo '<button hx-swap-oob="true" id="fish-button" hx-post="/catch" hx-target="#result" disabled class="w-full"
   _="on load
   set now to 0
@@ -340,16 +349,10 @@ catch_fish() {
     wait 1s
     js return Date.now() end then put it into now
   end">2:00</button>'
-    FISH_JSON='{"fish":"'$fish'","classification":"'$classification'","caught_by":"'$USER_NAME'","twitch_id":'$USER_ID',"id":'$fish_id',"stats":'$stats_json',"float":"'$fish_float'"}'
-    popd &> /dev/null
-    tbus_send "fish-catch" "$FISH_JSON"
-    if [[ "$(fishdex check)" != "$PRECHECK" ]]; then
-      send_twitch_msg "YOU HAVE COMPLETED THEIR FISHDEX!!!!!!!!"
-    fi
 }
 
 uncaught_fish() {
-    cd "$FISH_ROOT/${CHAN:-badcop_}"
+    cd "$FISH_ROOT/${CHAN}"
     diff <(find * -maxdepth 0 -type f | xargs cut -d',' -f1 | sort -nu) <(cut -d' ' -f1 $FISH_ROOT/fish-by-rarity2/* | sort -nu) | grep '>'
 }
 

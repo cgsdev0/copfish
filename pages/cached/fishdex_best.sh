@@ -4,7 +4,7 @@ header Content-Type text/html
 header Cache-Control "public, max-age=60"
 end_headers
 
-cd "$FISH_ROOT/badcop_"
+cd "$FISH_ROOT/$CHAN"
 
 declare -A USERNAME_CACHE
 load_user_cache

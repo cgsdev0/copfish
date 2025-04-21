@@ -9,8 +9,8 @@ declare -A USERNAME_CACHE
 load_user_cache
 
 total=$(cut -d' ' -f1 "$FISH_ROOT"/fish-by-rarity2/* | sort -nu | wc -l)
-count=$(cut -d',' -f2 "$FISH_ROOT/badcop_/$PROFILE" | sort -nu | wc -l)
-cd "$FISH_ROOT/badcop_"
+count=$(cut -d',' -f2 "$FISH_ROOT/$CHAN/$PROFILE" | sort -nu | wc -l)
+cd "$FISH_ROOT/$CHAN"
 
 ATTR='width=64 height=64'
 
@@ -74,7 +74,7 @@ fishdex() {
 uncaught_fish() {
     diff <(cut -d',' -f2-3 "$PROFILE" | sort -nu) <(cat "$FISH_ROOT"/fish-by-rarity2/* | sed 's/ /,/' | sort -nu) | grep '>' | sed 's/^> //;s/$/,0/' | fish_images
 }
-famous=$(jq -r '.twitchID' "$FISH_ROOT/badcop_/hall-of-fame/json" | grep "^$PROFILE$" | wc -l)
+famous=$(jq -r '.twitchID' "$FISH_ROOT/$CHAN/hall-of-fame/json" | grep "^$PROFILE$" | wc -l)
 
 if [[ "${QUERY_PARAMS['load']}" == "rest" ]]; then
   htmx_page <<-EOF

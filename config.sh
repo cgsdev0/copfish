@@ -2,10 +2,33 @@ source secrets.sh
 PROJECT_NAME=cop.fish
 PORT=5125
 TAILWIND=on
+CHAN=badcop_
 HIDE_LOGO=true
 FISH_ROOT="${FISH_ROOT:-$HOME/data/fishing}"
-mkdir -p $FISH_ROOT/data
+mkdir -p "$FISH_ROOT/data"
+mkdir -p "$FISH_ROOT/$CHAN/captcha"
 ENABLE_SESSIONS=true
+
+regen_captcha() {
+  sleep 1
+  now=$(date +%s)
+  last=$(cat "$FISH_ROOT/$CHAN/captcha/now" || echo 0)
+  if ((last+120 > now)); then
+    return
+  fi
+  captcha=$((SRANDOM % 9))
+  JX=$((SRANDOM % 8 - 4))
+  JY=$((SRANDOM % 8 - 4))
+  X=$(((captcha % 3 + 1) * 32 + JX))
+  Y=$(((captcha / 3 + 1) * 32 + JY))
+  EX=$((X+9))
+  EY=$((Y+9))
+  echo "$captcha" > "$FISH_ROOT/$CHAN/captcha/id"
+  echo "$now" > "$FISH_ROOT/$CHAN/captcha/now"
+  convert \
+      static/water_128px.gif -fill "#0000004F" \
+            -draw "circle $X,$Y $EX,$EY" static/captcha.gif &> /dev/null
+}
 
 sanitize() {
   : "$(urldecode "$1")"
