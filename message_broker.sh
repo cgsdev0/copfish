@@ -63,10 +63,18 @@ start_tau_websocket() {
                 sed -i '/^[^,]\+,[^,]\+,[^,]\+,'$fishfloat',[^,]\+,[^,]\+,[^,]\+,[^,]\+$/s/\(.*\)/\1,'$wins'/' "$FISH_ROOT/$CHAN/$twitchID"
               ;;
               "stream-offline")
-                  echo "OFFLINE" > "$FISH_ROOT/status"
+                  login=$(echo "$line" | jq -r '.event_data.broadcaster_user_login')
+                  if [[ "$login" == "$CHAN" ]]; then
+                    echo "OFFLINE" > "$FISH_ROOT/status"
+                  fi
                   ;;
               "stream-online")
-                  echo "ONLINE" > "$FISH_ROOT/status"
+                  [[ -f "$FISH_ROOT/$CHAN/recent-catches/data" ]] && rm "$FISH_ROOT/$CHAN/recent-catches/data"
+                  touch "$FISH_ROOT/$CHAN/recent-catches/data"
+                  login=$(echo "$line" | jq -r '.event_data.broadcaster_user_login')
+                  if [[ "$login" == "$CHAN" ]]; then
+                    echo "ONLINE" > "$FISH_ROOT/status"
+                  fi
                   # LICENSE="$(gen_license)"
                   # echo "${LICENSE,,}" > "$FISH_ROOT/license"
                   # tbus_send "new-license" "{\"license\": \"$LICENSE\"}" &
