@@ -64,7 +64,8 @@ source fishutils.sh
 
 if [[ -z "$CAPTCHA" ]]; then
   CURRENT="$(cat "$FISH_ROOT/$CHAN/captcha/id")"
-  echo "$CURRENT" > "$FISH_ROOT/$CHAN/captcha/$USER_ID"
+  SESSION[captcha]="$CURRENT"
+  save_session
   echo "<div class='captcha-wrapper'><div class='captcha' style=\"display: grid;grid-template-columns: repeat(3, 1fr);grid-template-rows: repeat(3, 1fr);width:256px;height:256px;background-size:cover;background-image:url('data:image/gif;base64,$(base64 -w 0 static/captcha.gif)');\">"
   echo "<div hx-target='#result' hx-post='/catch?captcha=0'></div>"
   echo "<div hx-target='#result' hx-post='/catch?captcha=1'></div>"
@@ -86,16 +87,16 @@ if [[ -z "$CAPTCHA" ]]; then
   return $(status_code 200)
 fi
 
-MY_CAPTCHA="$FISH_ROOT/$CHAN/captcha/$USER_ID"
-if [[ -f "$MY_CAPTCHA" ]]; then
-  CURRENT="$(cat "$MY_CAPTCHA")"
-  rm "$MY_CAPTCHA"
+CURRENT="${SESSION[captcha]}"
+if [[ -n "$CURRENT" ]]; then
+  SESSION[captcha]=
   if [[ "$CAPTCHA" != "$CURRENT" ]]; then
     FAILED=1
   fi
 else
   FAILED=1
 fi
+save_session
 
 if [[ -n $FAILED ]]; then
   echo $(( now + 120 )) > "$FISH_ROOT/fishing-cooldowns/.$USER_ID.cooldown"
